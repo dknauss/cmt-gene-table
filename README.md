@@ -4,7 +4,9 @@ An open, downloadable table of the genes linked to Charcot-Marie-Tooth disease (
 - the ClinGen evidence rating;
 - the disease and its MONDO ID;
 - the conventional subtype names (CMT1A, CMT2N, CMTX1, HSAN1D…);
-- the matching OMIM phenotype IDs.
+- the matching OMIM phenotype IDs;
+- links to the GeneReviews chapter(s) and PanelApp gene pages, with PanelApp ratings;
+- the neuropathy type, registered clinical trials, and a one-sentence plain-language note, each traced to a cited source.
 
 It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
 
@@ -26,11 +28,45 @@ It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
 | `subtype_mondo_ids` | MONDO via Monarch | The MONDO terms those names come from |
 | `omim_phenotype_ids` | MONDO cross-references | IDs only; no OMIM text is reproduced |
 | `subtype_review_note` | Build notes | Provenance and anything flagged for human review |
-| `phenotype`, `genereviews`, `panelapp`, `therapy_programs`, `plain_note` | — | Blank for now; to be filled by hand from cited sources |
+| `genereviews` | NCBI GeneReviews report files | Chapter title and link for every GeneReviews chapter NCBI maps to the gene, separated by `; `. Starts `[overview only]` when every chapter is an overview |
+| `panelapp` | PanelApp APIs | Rating (Green/Amber/Red), panel, version and gene-page link on Genomics England panel 846 and PanelApp Australia panel 3070 |
+| `phenotype` | Hand-checked | One or more of axonal, demyelinating, intermediate, motor-predominant, sensory-predominant |
+| `therapy_programs` | Hand-checked | Registered trials of drugs, biologics or gene therapies for the gene's neuropathy, with phase, status and link |
+| `plain_note` | Hand-checked | One sentence in plain language, written for this table |
 
 Supporting files:
 - `data/clingen-cmt.csv` holds the ClinGen rows as downloaded.
 - `data/subtype-names.csv` holds the subtype-name lookup, with source URLs for every gene.
+- `data/links.csv` holds the GeneReviews and PanelApp links, built by `tools/fetch-links.py`.
+- `data/hand-checked-sources.csv` holds every hand-checked value with its source URL, access date and a note. A value with two sources has two rows. `merge.py` refuses a row without a source URL.
+
+### GeneReviews and PanelApp Links
+
+These are built by script, so they can be regenerated.
+- **GeneReviews:** NCBI's weekly gene-to-chapter files (`NBKid_shortname_genesymbol.txt` and `GRtitle_shortname_NBKid.txt` from [ftp.ncbi.nlm.nih.gov/pub/GeneReviews](https://ftp.ncbi.nlm.nih.gov/pub/GeneReviews/)). Gene-specific chapters are listed first. Some genes are mapped to chapters about other conditions (for example SETX to ataxia chapters); those are kept because NCBI maps them. 50 genes have at least one chapter; 30 of those have overviews only; 20 have none.
+- **PanelApp:** [Genomics England panel 846](https://panelapp.genomicsengland.co.uk/panels/846/), "Hereditary neuropathy or pain disorder" (the signed-off NHS Genomic Medicine Service panel for test R78), and [PanelApp Australia panel 3070](https://panelapp-aus.org/panels/3070/), "Hereditary Neuropathy". The panel version at the time of the build is recorded in each value. Genomics England's legacy 100,000 Genomes panel 85 is not used. All 70 genes are on both panels. Genomics England links use its own gene symbols, which are older for some genes (AARS, GARS, MARS, WARS, YARS, SEPT9); matching is done by HGNC ID.
+
+### Hand-Checked Columns
+
+**Phenotype** values are taken, in this order of preference, from:
+1. a gene-specific GeneReviews chapter that states the neuropathy type;
+2. the GeneReviews [CMT overview](https://www.ncbi.nlm.nih.gov/books/NBK1358/), Table 4 (Ax/De/In marks), Table 3 (HSN/HSAN genes, recorded as sensory-predominant) and Table 4's comments and other designations (motor neuropathy, dHMN or DSMA, recorded as motor-predominant);
+3. ClinGen's curated disease label when it names the type (for example "distal hereditary motor neuropathy");
+4. a cited PubMed paper (GAN, MED25, PRX, SBF1, SLC25A46).
+
+Nothing is inferred from subtype names. SEPTIN9 (neuralgic amyotrophy) is left blank because its condition fits none of the categories.
+
+Two values need review, because GeneReviews' overview table disagrees with another source:
+- **SH3TC2:** the overview's Table 4 marks it axonal, but the GeneReviews SH3TC2 chapter calls it demyelinating. The chapter is used.
+- **PRX:** the overview marks it axonal. The cited review (Dubourg et al 2006) lists it among demyelinating recessive CMT genes, and that is used.
+
+**Therapy programs** come from the [ClinicalTrials.gov API v2](https://clinicaltrials.gov/data-api/api). Every gene was searched by symbol, and CMT, HMSN, HSAN, HSN, dHMN, HNPP, familial dysautonomia, giant axonal neuropathy, SORD, SMARD and related conditions were searched as well. A trial is listed when:
+- it tests a drug, biologic or gene therapy;
+- it enrols by gene, or by a subtype tied to one gene (CMT1A for PMP22, for example).
+
+Rehabilitation, device, biomarker and natural-history studies are left out. So are trials that enrol by broad CMT type, such as ACE-083 (CMT1 and CMTX) and NMD670 (CMT1 and CMT2). Status is as of the access date. "none found as of 2026-10-13" means the searches found nothing; it does not mean no research exists. Company and foundation pipeline pages have not been reviewed yet, so preclinical programs are not listed.
+
+**Plain notes** are written for this table from the sources cited for them, usually the ClinGen report plus GeneReviews. No source text is copied, and the notes do not give clinical advice.
 
 ### How Subtype Names Are Derived
 
@@ -64,17 +100,21 @@ The tools need only Python 3 and its standard library:
 python3 tools/build-clingen.py    # download ClinGen's file, keep the CMT panel's rows
 python3 tools/fetch-monarch.py    # cache Monarch/MONDO lookups in cache/
 python3 tools/build-subtypes.py   # derive subtype names
-python3 tools/merge.py            # write data/cmt-genes.csv
+python3 tools/fetch-links.py      # GeneReviews and PanelApp links (add --refresh to bypass cache/)
+python3 tools/merge.py            # write data/cmt-genes.csv, adding data/hand-checked-sources.csv
 ```
 
-A monthly GitHub Actions job runs these steps and opens a pull request when ClinGen or MONDO data change. Changes are reviewed by hand before merging.
+A monthly GitHub Actions job runs these steps and opens a pull request when ClinGen, MONDO, GeneReviews or PanelApp data change. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
 
 ## Sources and Licences
 
 - **ClinGen** gene-disease validity curations: public domain (CC0). Data from [search.clinicalgenome.org](https://search.clinicalgenome.org/kb/gene-validity).
 - **MONDO** disease ontology, CC BY 4.0, retrieved through the [Monarch Initiative API](https://api-v3.monarchinitiative.org/) (CC BY 4.0). Cite: Vasilevsky NA et al., "Mondo: Unifying diseases for the world, by the world," *medRxiv* (2022), [doi:10.1101/2022.04.13.22273750](https://doi.org/10.1101/2022.04.13.22273750).
 - **OMIM**: identifiers only. OMIM's terms do not allow its content to be redistributed.
-- **GeneReviews** and **PanelApp**, when added, are linked only. Their text is not copied.
+- **GeneReviews®**: © 1993–2026 University of Washington, Seattle. GeneReviews permits noncommercial research reproduction only, with credit and a link. This table links to chapters and records their titles. It does not copy chapter text. Neuropathy types and other facts drawn from GeneReviews are cited per row in `data/hand-checked-sources.csv`. See the [GeneReviews Copyright Notice and Usage Disclaimer](https://www.ncbi.nlm.nih.gov/books/n/gene/GRcopyright_permiss/).
+- **PanelApp** ([Genomics England](https://panelapp.genomicsengland.co.uk/) and [PanelApp Australia](https://panelapp-aus.org/)): the table records a link, the panel version and each gene's public traffic-light rating. It does not copy evidence text or reviews. Check each site's terms before reuse. Genomics England's terms restrict commercial and diagnostic use, and this table must not be used for diagnosis.
+- **ClinicalTrials.gov**: US National Library of Medicine; public data.
+- **PubMed** abstracts are cited by link only.
 
 The data in `data/` is released under [CC BY 4.0](LICENSE-DATA). Credit "Open CMT Gene Table (cmt.blog), using ClinGen (CC0) and MONDO (CC BY 4.0)". The scripts in `tools/` are under the [MIT License](LICENSE).
 
