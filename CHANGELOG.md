@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-13 (Source Disagreements Documented)
+
+- SH3TC2, PRX, GJB1 and MED25 phenotype values: reviewed and kept. Where sources disagree, the note now says "Sources disagree" and names both sources, and the README lists all four cases.
+- README cites the peer-reviewed MONDO paper (*Genetics*, 2026).
+
 ## 2026-10-13 (Links and Hand-Checked Columns)
 
 - Added `genereviews` and `panelapp`, built by the new `tools/fetch-links.py` from NCBI's GeneReviews report files and the PanelApp APIs: Genomics England panel 846 v8.38 and PanelApp Australia panel 3070 v3.1. 50 genes have a GeneReviews chapter (30 overview-only) and 20 have none. All 70 genes are on both panels. The monthly workflow now rebuilds these columns.

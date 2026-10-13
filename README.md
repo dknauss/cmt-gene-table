@@ -56,9 +56,11 @@ These are built by script, so they can be regenerated.
 
 Nothing is inferred from subtype names. SEPTIN9 (neuralgic amyotrophy) is left blank because its condition fits none of the categories.
 
-Two values need review, because GeneReviews' overview table disagrees with another source:
-- **SH3TC2:** the overview's Table 4 marks it axonal, but the GeneReviews SH3TC2 chapter calls it demyelinating. The chapter is used.
+Where sources disagree, the value used and the disagreement are both recorded in `data/hand-checked-sources.csv` (the `note` column). The current cases:
+- **SH3TC2:** GeneReviews' overview table (Table 4) marks it axonal, but the GeneReviews SH3TC2 chapter calls it demyelinating. The chapter is used.
 - **PRX:** the overview marks it axonal. The cited review (Dubourg et al 2006) lists it among demyelinating recessive CMT genes, and that is used.
+- **GJB1:** the overview marks it axonal, demyelinating and intermediate. The GeneReviews GJB1 chapter classes it as intermediate, and that is used.
+- **MED25:** listed as axonal from Montecchiani et al 2016, but ClinGen rates the gene's link to CMT as Disputed.
 
 **Therapy programs** come from the [ClinicalTrials.gov API v2](https://clinicaltrials.gov/data-api/api). Every gene was searched by symbol, and CMT, HMSN, HSAN, HSN, dHMN, HNPP, familial dysautonomia, giant axonal neuropathy, SORD, SMARD and related conditions were searched as well. A trial is listed when:
 - it tests a drug, biologic or gene therapy;
