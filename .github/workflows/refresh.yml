@@ -22,11 +22,12 @@ jobs:
           python3 tools/build-clingen.py
           python3 tools/fetch-monarch.py
           python3 tools/build-subtypes.py
+          python3 tools/fetch-links.py --refresh
           python3 tools/merge.py
       - name: Open a pull request if the data changed
         uses: peter-evans/create-pull-request@v6
         with:
           branch: refresh/monthly
           title: "Monthly data refresh"
-          commit-message: "Monthly refresh from ClinGen and MONDO"
+          commit-message: "Monthly refresh from ClinGen, MONDO, GeneReviews and PanelApp"
           body: "Automated rebuild. Review every changed row against its source before merging, and add a dated entry to CHANGELOG.md."
