@@ -1,0 +1,32 @@
+name: Monthly refresh
+
+on:
+  schedule:
+    - cron: "17 9 3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rebuild the table
+        run: |
+          python3 tools/build-clingen.py
+          python3 tools/fetch-monarch.py
+          python3 tools/build-subtypes.py
+          python3 tools/merge.py
+      - name: Open a pull request if the data changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: refresh/monthly
+          title: "Monthly data refresh"
+          commit-message: "Monthly refresh from ClinGen and MONDO"
+          body: "Automated rebuild. Review every changed row against its source before merging, and add a dated entry to CHANGELOG.md."
