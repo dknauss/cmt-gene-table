@@ -7,6 +7,9 @@ not covered by the rating in that row, follow in italics, as do older or
 unverified names (from correlated associations only). Names rejected in
 data/name-reviews.csv are left out. Rows that need a
 note get a [[FN:KEY]] placeholder, which the page's footnote IDs replace.
+A gene with more than one curation gets one key per row ([[FN:PMP22:MONDO:0007309]]),
+because WordPress core footnotes cannot point two markers at one note: the
+block editor duplicates the note on save.
 """
 import csv, html, os
 
@@ -15,6 +18,9 @@ INH = {"AD": "Dominant", "AR": "Recessive", "SD": "Semidominant", "XL": "X-linke
 NOTE = {"FBLN5", "HINT1", "MED25", "MFN2", "SCN11A", "SORD", "NEFL", "PMP22", "NTRK1"}
 
 rows = list(csv.DictReader(open(os.path.join(ROOT, "data", "cmt-genes.csv"), encoding="utf-8")))
+per_gene = {}
+for r in rows:
+    per_gene[r["gene"]] = per_gene.get(r["gene"], 0) + 1
 out = []
 for r in rows:
     names = [x.strip() for x in r["curation_subtype_names"].split(";") if x.strip()]
@@ -22,7 +28,8 @@ for r in rows:
     older = [x.strip() for x in r["unverified_names"].split(";") if x.strip()]
     cell = html.escape(", ".join(names)) if names else "—"
     if r["gene"] in NOTE:
-        cell += f"[[FN:{r['gene']}]]"
+        key = r["gene"] if per_gene[r["gene"]] == 1 else f"{r['gene']}:{r['mondo_id']}"
+        cell += f"[[FN:{key}]]"
     extra = []
     if other:
         extra.append("Other names, not rated here: " + html.escape(", ".join(other)) + ".")
