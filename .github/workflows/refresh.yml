@@ -29,5 +29,5 @@ jobs:
         with:
           branch: refresh/monthly
           title: "Monthly data refresh"
-          commit-message: "Monthly refresh from ClinGen, MONDO, GeneReviews and PanelApp"
+          commit-message: "Monthly refresh from ClinGen, Mondo, GeneReviews and PanelApp"
           body: "Automated rebuild. Review every changed row against its source before merging, and add a dated entry to CHANGELOG.md."

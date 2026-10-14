@@ -2,8 +2,8 @@
 """Merge the source files into data/cmt-genes.csv.
 
 - ClinGen columns are copied unchanged from data/clingen-cmt.csv.
-- Subtype names, their MONDO IDs and the OMIM phenotype IDs come from
-  data/subtype-names.csv (Monarch/MONDO).
+- Subtype names, their Mondo IDs and the OMIM phenotype IDs come from
+  data/subtype-names.csv (Monarch/Mondo).
 - genereviews and panelapp come from data/links.csv (tools/fetch-links.py).
 - phenotype, therapy_programs and plain_note come from
   data/hand-checked-sources.csv, where every value carries its source URL.

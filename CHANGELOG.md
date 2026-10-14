@@ -1,9 +1,13 @@
 # Changelog
 
+## 2026-10-13 (Mondo Spelled as a Name)
+
+- Prose, source labels and notes now write the ontology's name as Mondo, its own spelling. IDs keep the `MONDO:` prefix, and column names and ClinGen's own `DISEASE ID (MONDO)` header are unchanged, so nothing that parses the files needs updating.
+
 ## 2026-10-13 (Source Disagreements Documented)
 
 - SH3TC2, PRX, GJB1 and MED25 phenotype values: reviewed and kept. Where sources disagree, the note now says "Sources disagree" and names both sources, and the README lists all four cases.
-- README cites the peer-reviewed MONDO paper (*Genetics*, 2026).
+- README cites the peer-reviewed Mondo paper (*Genetics*, 2026).
 
 ## 2026-10-13 (Links and Hand-Checked Columns)
 
@@ -14,4 +18,4 @@
 ## 2026-10-13
 
 - First draft: 72 ClinGen curations (70 genes) from the Charcot-Marie-Tooth Disease Gene Curation Expert Panel, ClinGen file of October 13, 2026.
-- Added subtype names, MONDO IDs and OMIM phenotype IDs from MONDO via the Monarch API. 62 genes have names; 8 do not.
+- Added subtype names, Mondo IDs and OMIM phenotype IDs from Mondo via the Monarch API. 62 genes have names; 8 do not.

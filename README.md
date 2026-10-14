@@ -2,7 +2,7 @@
 
 An open, downloadable table of the genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited neuropathies. For each gene it gives:
 - the ClinGen evidence rating;
-- the disease and its MONDO ID;
+- the disease and its Mondo ID;
 - the conventional subtype names (CMT1A, CMT2N, CMTX1, HSAN1D…);
 - the matching OMIM phenotype IDs;
 - links to the GeneReviews chapter(s) and PanelApp gene pages, with PanelApp ratings;
@@ -24,9 +24,9 @@ It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
 | `clingen_classification`, `classification_date` | ClinGen | Definitive, Strong, Moderate, Limited, Disputed… |
 | `clingen_report` | ClinGen | Link to the full curation |
 | `type_named_in_label` | Derived | The CMT type named in ClinGen's own label, if any |
-| `historical_subtype_names` | MONDO via Monarch | Conventional subtype names, separated by `; ` |
-| `subtype_mondo_ids` | MONDO via Monarch | The MONDO terms those names come from |
-| `omim_phenotype_ids` | MONDO cross-references | IDs only; no OMIM text is reproduced |
+| `historical_subtype_names` | Mondo via Monarch | Conventional subtype names, separated by `; ` |
+| `subtype_mondo_ids` | Mondo via Monarch | The Mondo terms those names come from |
+| `omim_phenotype_ids` | Mondo cross-references | IDs only; no OMIM text is reproduced |
 | `subtype_review_note` | Build notes | Provenance and anything flagged for human review |
 | `genereviews` | NCBI GeneReviews report files | Chapter title and link for every GeneReviews chapter NCBI maps to the gene, separated by `; `. Starts `[overview only]` when every chapter is an overview |
 | `panelapp` | PanelApp APIs | Rating (Green/Amber/Red), panel, version and gene-page link on Genomics England panel 846 and PanelApp Australia panel 3070 |
@@ -72,16 +72,16 @@ Rehabilitation, device, biomarker and natural-history studies are left out. So a
 
 ### How Subtype Names Are Derived
 
-Names are converted mechanically from MONDO disease labels and exact synonyms. For example:
+Names are converted mechanically from Mondo disease labels and exact synonyms. For example:
 - "Charcot-Marie-Tooth disease axonal type 2N" becomes CMT2N.
 - "neuropathy, hereditary sensory, type 1D" becomes HSN1D.
 - "…X-linked dominant 1" becomes CMTX1.
 
-Nothing is filled in from memory. Where MONDO has no lettered subtype name for a gene, the field is left blank. Eight genes are blank: ARHGEF10, GAN, KIF5A, MCM3AP, SCO2, SEPTIN9, SETX and SYT2.
+Nothing is filled in from memory. Where Mondo has no lettered subtype name for a gene, the field is left blank. Eight genes are blank: ARHGEF10, GAN, KIF5A, MCM3AP, SCO2, SEPTIN9, SETX and SYT2.
 
 Some names need human review before they are relied on. They are flagged in `subtype_review_note`:
-- **MFN2:** MONDO writes CMT2A2; it is conventionally written CMT2A2A.
-- **SORD:** the only MONDO name is a distal motor neuropathy symbol, HMNR8.
+- **MFN2:** Mondo writes CMT2A2; it is conventionally written CMT2A2A.
+- **SORD:** the only Mondo name is a distal motor neuropathy symbol, HMNR8.
 - **SCN11A:** HSAN2D comes only from a correlated association, which is probably spurious.
 - **HINT1, FBLN5 and MED25:** each has an unusual or single-source name.
 
@@ -100,25 +100,25 @@ The tools need only Python 3 and its standard library:
 
 ```bash
 python3 tools/build-clingen.py    # download ClinGen's file, keep the CMT panel's rows
-python3 tools/fetch-monarch.py    # cache Monarch/MONDO lookups in cache/
+python3 tools/fetch-monarch.py    # cache Monarch/Mondo lookups in cache/
 python3 tools/build-subtypes.py   # derive subtype names
 python3 tools/fetch-links.py      # GeneReviews and PanelApp links (add --refresh to bypass cache/)
 python3 tools/merge.py            # write data/cmt-genes.csv, adding data/hand-checked-sources.csv
 ```
 
-A monthly GitHub Actions job runs these steps and opens a pull request when ClinGen, MONDO, GeneReviews or PanelApp data change. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
+A monthly GitHub Actions job runs these steps and opens a pull request when ClinGen, Mondo, GeneReviews or PanelApp data change. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
 
 ## Sources and Licences
 
 - **ClinGen** gene-disease validity curations: public domain (CC0). Data from [search.clinicalgenome.org](https://search.clinicalgenome.org/kb/gene-validity).
-- **MONDO** disease ontology, CC BY 4.0, retrieved through the [Monarch Initiative API](https://api-v3.monarchinitiative.org/) (CC BY 4.0). Cite: Vasilevsky NA et al., "Mondo: integrating disease terminology across communities," *Genetics* 232, no. 4 (2026): iyaf215, [doi:10.1093/genetics/iyaf215](https://doi.org/10.1093/genetics/iyaf215). (The 2022 medRxiv preprint, [doi:10.1101/2022.04.13.22273750](https://doi.org/10.1101/2022.04.13.22273750), is superseded.)
+- **Mondo** disease ontology (Mondo Disease Ontology), CC BY 4.0, retrieved through the [Monarch Initiative API](https://api-v3.monarchinitiative.org/) (CC BY 4.0). Cite: Vasilevsky NA et al., "Mondo: integrating disease terminology across communities," *Genetics* 232, no. 4 (2026): iyaf215, [doi:10.1093/genetics/iyaf215](https://doi.org/10.1093/genetics/iyaf215). (The 2022 medRxiv preprint, [doi:10.1101/2022.04.13.22273750](https://doi.org/10.1101/2022.04.13.22273750), is superseded.) Mondo is a name, not an acronym: it comes from the Latin *mundus*, "world." Only its IDs are written in capitals, with the prefix `MONDO:`, as in `MONDO:0007309`; column names such as `mondo_id` stay lower case.
 - **OMIM**: identifiers only. OMIM's terms do not allow its content to be redistributed.
 - **GeneReviews®**: © 1993–2026 University of Washington, Seattle. GeneReviews permits noncommercial research reproduction only, with credit and a link. This table links to chapters and records their titles. It does not copy chapter text. Neuropathy types and other facts drawn from GeneReviews are cited per row in `data/hand-checked-sources.csv`. See the [GeneReviews Copyright Notice and Usage Disclaimer](https://www.ncbi.nlm.nih.gov/books/n/gene/GRcopyright_permiss/).
 - **PanelApp** ([Genomics England](https://panelapp.genomicsengland.co.uk/) and [PanelApp Australia](https://panelapp-aus.org/)): the table records a link, the panel version and each gene's public traffic-light rating. It does not copy evidence text or reviews. Check each site's terms before reuse. Genomics England's terms restrict commercial and diagnostic use, and this table must not be used for diagnosis.
 - **ClinicalTrials.gov**: US National Library of Medicine; public data.
 - **PubMed** abstracts are cited by link only.
 
-The data in `data/` is released under [CC BY 4.0](LICENSE-DATA). Credit "Open CMT Gene Table (cmt.blog), using ClinGen (CC0) and MONDO (CC BY 4.0)". The scripts in `tools/` are under the [MIT License](LICENSE).
+The data in `data/` is released under [CC BY 4.0](LICENSE-DATA). Credit "Open CMT Gene Table (cmt.blog), using ClinGen (CC0) and Mondo (CC BY 4.0)". The scripts in `tools/` are under the [MIT License](LICENSE).
 
 ## Corrections
 

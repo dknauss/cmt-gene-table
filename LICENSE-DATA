@@ -2,11 +2,11 @@ The data files in data/ are licensed under the Creative Commons Attribution 4.0
 International License (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
 Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
 
-Attribution: "Open CMT Gene Table (cmt.blog), using ClinGen (CC0) and MONDO (CC BY 4.0)."
+Attribution: "Open CMT Gene Table (cmt.blog), using ClinGen (CC0) and Mondo (CC BY 4.0)."
 
 Upstream sources:
 - ClinGen gene-disease validity curations, public domain (CC0 1.0),
   https://search.clinicalgenome.org/kb/gene-validity
-- MONDO Disease Ontology, CC BY 4.0, https://mondo.monarchinitiative.org/,
+- Mondo Disease Ontology, CC BY 4.0, https://mondo.monarchinitiative.org/,
   retrieved through the Monarch Initiative API, https://api-v3.monarchinitiative.org/
 - OMIM identifiers only; no OMIM content is reproduced.
