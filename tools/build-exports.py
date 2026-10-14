@@ -232,6 +232,9 @@ def main():
     sizes = {n: os.path.getsize(os.path.join(DIST, n)) for n in ("cmt-genes.csv", "cmt-genes.xlsx", "cmt-genes.json")}
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(build_page(rows, fields, guide, ver, sizes))
+    for name in os.listdir(os.path.join(ROOT, "site", "pages")):
+        if name.endswith(".svg"):
+            shutil.copyfile(os.path.join(ROOT, "site", "pages", name), os.path.join(DIST, name))
     open(os.path.join(DIST, ".nojekyll"), "w").close()
     print(f"{len(rows)} rows, version {ver}: " + ", ".join(sorted(os.listdir(DIST))))
 

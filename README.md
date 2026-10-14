@@ -10,7 +10,7 @@ An open, downloadable table of the genes linked to Charcot-Marie-Tooth disease (
 - links to the GeneReviews chapter(s) and PanelApp gene pages, with PanelApp ratings;
 - the neuropathy type, clinical trials found in ClinicalTrials.gov for that disease, and a one-sentence plain-language note, each traced to a cited source.
 
-It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
+It is maintained by Dan Knauss ([ORCID 0000-0001-7007-5807](https://orcid.org/0000-0001-7007-5807)) for [cmt.blog](https://cmt.blog). Releases are archived at [Zenodo](https://doi.org/10.5281/zenodo.23371750) and indexed by [OpenAIRE](https://explore.openaire.eu/search/dataset?datasetId=od______2659::1fd2a6686eb918f6fdca0646d8ee3f49).
 
 **This is not medical advice and not a diagnostic tool.** It summarizes public curation data so that patients, families and writers can find their way around the gene names. Genetic results should be interpreted by a clinician or genetic counsellor. Follow the source links for the authoritative curation.
 
