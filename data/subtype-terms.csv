@@ -1,0 +1,95 @@
+gene,mondo_id,mondo_label,short_names,omim_ids,association
+AARS1,MONDO:0013212,Charcot-Marie-Tooth disease axonal type 2N,CMT2N,OMIM:613287,causal
+ATL1,MONDO:0013381,"neuropathy, hereditary sensory, type 1D",HSN1D,OMIM:613708,causal
+ATL3,MONDO:0014286,"neuropathy, hereditary sensory, type 1F",HSN1F,OMIM:615632,causal
+ATP1A1,MONDO:0054833,"Charcot-Marie-tooth disease, axonal, type 2DD",CMT2DD,OMIM:618036,causal
+ATP7A,MONDO:0010338,X-linked distal spinal muscular atrophy type 3,X-linked dHMN3,OMIM:300489,causal
+BSCL2,MONDO:0030860,"neuronopathy, distal hereditary motor, type 5C",dHMN5C,OMIM:619112,causal
+CADM3,MONDO:0030433,"Charcot-Marie-Tooth disease, axonal, type 2FF",CMT2FF,OMIM:619519,causal
+COQ7,MONDO:0957874,"neuronopathy, distal hereditary motor, autosomal recessive 9",HMNR9,OMIM:620402,causal
+DNAJB2,MONDO:0013947,"neuronopathy, distal hereditary motor, autosomal recessive 5",HMNR5; dSMA5,OMIM:614881,causal
+DNM2,MONDO:0011674,Charcot-Marie-Tooth disease dominant intermediate B,CMTDIB,OMIM:606482,causal
+DNM2,MONDO:0016431,autosomal dominant Charcot-Marie-Tooth disease type 2M,CMT2M,,correlated
+DST,MONDO:0013839,hereditary sensory and autonomic neuropathy type 6,HSAN6,OMIM:614653,causal
+DYNC1H1,MONDO:0013644,Charcot-Marie-Tooth disease axonal type 2O,CMT2O,OMIM:614228,causal
+EGR2,MONDO:0011527,Charcot-Marie-Tooth disease type 4E,CMT4E,OMIM:605253,causal
+EGR2,MONDO:0011890,Charcot-Marie-Tooth disease type 1D,CMT1D,OMIM:607678,causal
+EGR2,MONDO:0007790,Charcot-Marie-Tooth disease type 3,CMT3; DSS,OMIM:145900,causal
+ELP1,MONDO:0009131,Riley-Day syndrome,HSAN3,OMIM:223900,causal
+FBLN5,MONDO:0030689,"Charcot-Marie-Tooth disease, demyelinating, IIA 1H",CMT1H,OMIM:619764,causal
+FBXO38,MONDO:0014259,"neuronopathy, distal hereditary motor, type 2D",dHMN2D,OMIM:615575,causal
+FGD4,MONDO:0012250,Charcot-Marie-Tooth disease type 4H,CMT4H,OMIM:609311,causal
+FIG4,MONDO:0012640,Charcot-Marie-Tooth disease type 4J,CMT4J,OMIM:611228,causal
+GARS1,MONDO:0011091,Charcot-Marie-Tooth disease type 2D,CMT2D,OMIM:601472,causal
+GARS1,MONDO:0015353,"neuronopathy, distal hereditary motor, type 5A",dHMN5A,OMIM:600794,causal
+GDAP1,MONDO:0011916,Charcot-Marie-Tooth disease axonal type 2K,CMT2K,OMIM:607831,causal
+GDAP1,MONDO:0012014,Charcot-Marie-Tooth disease recessive intermediate A,CMTRIA,OMIM:608340,causal
+GDAP1,MONDO:0008961,Charcot-Marie-Tooth disease type 4A,CMT4A,OMIM:214400,causal
+GDAP1,MONDO:0020558,autosomal dominant Charcot-Marie-Tooth disease type 2K,CMT2K,,correlated
+GDAP1,MONDO:0011901,Charcot-Marie-Tooth disease axonal type 2H,CMT2H,OMIM:607731,correlated
+GJB1,MONDO:0010549,Charcot-Marie-Tooth disease X-linked dominant 1,CMTX1,OMIM:302800; OMIM:302900,causal
+GNB4,MONDO:0014074,Charcot-Marie-Tooth disease dominant intermediate F,CMTDIF,OMIM:615185,causal
+HINT1,MONDO:0007646,Gamstorp-Wohlfart syndrome,ARCMT2-NM,OMIM:137200,causal
+HSPB1,MONDO:0011687,Charcot-Marie-Tooth disease axonal type 2F,CMT2F,OMIM:606595,causal
+HSPB1,MONDO:0012080,"neuronopathy, distal hereditary motor, type 2B",dHMN2B,OMIM:608634,causal
+HSPB8,MONDO:0012096,Charcot-Marie-Tooth disease axonal type 2L,CMT2L,OMIM:608673,causal
+HSPB8,MONDO:0008025,"neuronopathy, distal hereditary motor, type 2A",dHMN2A,OMIM:158590,causal
+IGHMBP2,MONDO:0014511,Charcot-Marie-Tooth disease axonal type 2S,CMT2S,OMIM:616155,causal
+IGHMBP2,MONDO:0011436,autosomal recessive distal spinal muscular atrophy 1,SMARD1; dHMN6; dSMA1,OMIM:604320,causal
+INF2,MONDO:0013758,Charcot-Marie-Tooth disease dominant intermediate E,CMTDIE,OMIM:614455,causal
+ITPR3,MONDO:0859311,"Charcot-Marie-Tooth disease, demyelinating, type 1J",CMT1J,OMIM:620111,causal
+KIF1B,MONDO:0007308,Charcot-Marie-Tooth disease type 2A1,CMT2A1,OMIM:118210,causal
+LITAF,MONDO:0010995,Charcot-Marie-Tooth disease type 1C,CMT1C,OMIM:601098,causal
+LRSAM1,MONDO:0013753,Charcot-Marie-Tooth disease axonal type 2P,CMT2P,OMIM:608591; OMIM:614436,causal
+MARS1,MONDO:0014566,Charcot-Marie-Tooth disease axonal type 2U,CMT2U,OMIM:616280,causal
+MED25,MONDO:0011570,Charcot-Marie-Tooth disease type 2B2,CMT2B2,OMIM:605589,clingen
+MFN2,MONDO:0012231,Charcot-Marie-Tooth disease type 2A2,CMT2A2,OMIM:609260,causal
+MFN2,MONDO:0014906,"Charcot-Marie-Tooth disease, axonal, autosomal recessive, type 2a2b;",CMT2A2B,OMIM:617087,causal
+MFN2,MONDO:0011002,"neuropathy, hereditary motor and sensory, type 6A",HMSN6A,OMIM:601152,causal
+MFN2,MONDO:0010877,Charcot-Marie-Tooth disease type 5,CMT5,OMIM:600361,correlated
+MME,MONDO:0044640,Charcot-Marie-Tooth disease type 2T,CMT2T,OMIM:617017,causal
+MORC2,MONDO:0014736,Charcot-Marie-Tooth disease axonal type 2Z,CMT2Z,OMIM:616688,causal
+MPZ,MONDO:0011903,Charcot-Marie-Tooth disease type 2J,CMT2J,OMIM:607736,causal
+MPZ,MONDO:0011889,Charcot-Marie-Tooth disease type 2I,CMT2I,OMIM:607677,causal
+MPZ,MONDO:0008392,Roussy-Levy syndrome,Roussy-Levy syndrome,OMIM:180800,causal
+MPZ,MONDO:0007790,Charcot-Marie-Tooth disease type 3,CMT3; DSS,OMIM:145900,causal
+MPZ,MONDO:0011909,Charcot-Marie-Tooth disease dominant intermediate D,CMTDID,OMIM:607791,causal
+MPZ,MONDO:0007307,Charcot-Marie-Tooth disease type 1B,CMT1B,OMIM:118200,causal
+MPZ,MONDO:0020765,"neuropathy, congenital hypomyelinating, 2",CHN2,OMIM:618184,causal
+MTMR2,MONDO:0011066,Charcot-Marie-Tooth disease type 4B1,CMT4B1,OMIM:601382,causal
+NEFH,MONDO:0014836,Charcot-Marie-Tooth disease axonal type 2CC,CMT2CC,OMIM:616924,causal
+NEFL,MONDO:0011902,Charcot-Marie-Tooth disease type 1F,CMT1F,OMIM:607734,causal
+NEFL,MONDO:0011894,Charcot-Marie-Tooth disease type 2E,CMT2E,OMIM:607684,causal
+NEFL,MONDO:0036484,"Charcot-Marie-Tooth disease, dominant intermediate G",CMTDIG,OMIM:617882,causal
+NEFL,MONDO:0016454,Charcot-Marie-Tooth disease type 2B5,CMT2B5,,correlated
+NGF,MONDO:0012092,hereditary sensory and autonomic neuropathy type 5,HSAN5,OMIM:608654,causal
+NTRK1,MONDO:0009746,hereditary sensory and autonomic neuropathy type 4,HSAN4,OMIM:256800,causal
+NTRK1,MONDO:0012092,hereditary sensory and autonomic neuropathy type 5,HSAN5,OMIM:608654,correlated
+PDK3,MONDO:0010479,Charcot-Marie-Tooth disease X-linked dominant 6,CMTX6,OMIM:300905,causal
+PLEKHG5,MONDO:0012608,"neuronopathy, distal hereditary motor, autosomal recessive 4",HMNR4; dSMA4,OMIM:611067,causal
+PLEKHG5,MONDO:0014154,Charcot-Marie-Tooth disease recessive intermediate C,CMTRIC,OMIM:615376,causal
+PMP2,MONDO:0033135,"Charcot-Marie-Tooth disease, demyelinating, type 1G",CMT1G,OMIM:618279,causal
+PMP22,MONDO:0007311,Charcot-Marie-Tooth disease type 1E,CMT1E,OMIM:118300,causal
+PMP22,MONDO:0007309,Charcot-Marie-Tooth disease type 1A,CMT1A,OMIM:118220,causal
+PMP22,MONDO:0008392,Roussy-Levy syndrome,Roussy-Levy syndrome,OMIM:180800,causal
+PMP22,MONDO:0007790,Charcot-Marie-Tooth disease type 3,CMT3; DSS,OMIM:145900,causal
+PMP22,MONDO:0008087,hereditary neuropathy with liability to pressure palsies,HNPP,OMIM:162500,causal
+PRX,MONDO:0007790,Charcot-Marie-Tooth disease type 3,CMT3; DSS,OMIM:145900,causal
+PRX,MONDO:0013959,Charcot-Marie-Tooth disease type 4F,CMT4F,OMIM:614895,causal
+RAB7A,MONDO:0010949,Charcot-Marie-Tooth disease type 2B,CMT2B,OMIM:600882,causal
+RETREG1,MONDO:0013142,"neuropathy, hereditary sensory and autonomic, type 2B",HSAN2B,OMIM:613115,causal
+SBF1,MONDO:0014117,Charcot-Marie-Tooth disease type 4B3,CMT4B3,OMIM:615284,causal
+SBF2,MONDO:0011475,Charcot-Marie-Tooth disease type 4B2,CMT4B2,OMIM:604563,causal
+SCN11A,MONDO:0014244,hereditary sensory and autonomic neuropathy type 7,HSAN7,OMIM:615548,causal
+SCN11A,MONDO:0009459,"channelopathy-associated congenital insensitivity to pain, autosomal recessive",HSAN2D,OMIM:243000,correlated
+SH3TC2,MONDO:0011113,Charcot-Marie-Tooth disease type 4C,CMT4C,OMIM:601596,causal
+SLC25A46,MONDO:0014671,"neuropathy, hereditary motor and sensory, type 6B",HMSN6B,OMIM:616505,causal
+SLC5A7,MONDO:0008024,"neuronopathy, distal hereditary motor, type 7A",dHMN7A,OMIM:158580,causal
+SORD,MONDO:0030055,"neuronopathy, distal hereditary motor, autosomal recessive 8",HMNR8,OMIM:618912,causal
+SPTLC1,MONDO:0008086,"neuropathy, hereditary sensory and autonomic, type 1A",HSAN1A,OMIM:162400,causal
+SPTLC2,MONDO:0013337,"neuropathy, hereditary sensory and autonomic, type 1C",HSAN1C,OMIM:613640,causal
+TRPV4,MONDO:0011633,Charcot-Marie-Tooth disease axonal type 2C,CMT2C,OMIM:606071,causal
+TRPV4,MONDO:0010839,"neuronopathy, distal hereditary motor, autosomal dominant 8",HMND8,OMIM:600175,causal
+WARS1,MONDO:0060585,"neuronopathy, distal hereditary motor, type 9",dHMN9,OMIM:617721,causal
+WNK1,MONDO:0024309,"neuropathy, hereditary sensory and autonomic, type 2A",HSAN2A,OMIM:201300,causal
+YARS1,MONDO:0012012,Charcot-Marie-Tooth disease dominant intermediate C,CMTDIC,OMIM:608323,causal

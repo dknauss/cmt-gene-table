@@ -60,7 +60,7 @@ SPOT={
 rows=list(csv.DictReader(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','data','clingen-cmt.csv'))))
 genes=collections.OrderedDict()
 for r in rows: genes.setdefault(r['gene'],{'h':r['hgnc_id'],'cg':[]})['cg'].append(r['mondo_id'])
-out=[];stats=collections.Counter()
+out=[];stats=collections.Counter();termrows=[]
 for g,v in genes.items():
     h=v['h']; terms=collections.OrderedDict()
     for cat in ['Causal','Correlated']:
@@ -87,6 +87,9 @@ for g,v in genes.items():
     dropped=[r for r in recs if r['m'] in allsup and not r['omim']]
     recs=[r for r in recs if r not in dropped]
     if dropped: notes.append('dropped Mondo parent-group terms (no OMIM xref) in favour of their more specific subtypes: '+', '.join(f"{r['sh'][0]} ({r['m']})" for r in dropped))
+    for r in recs:
+        assoc='causal' if 'Causal' in r['src'] else ('clingen' if 'ClinGen' in r['src'] else 'correlated')
+        termrows.append(dict(gene=g,mondo_id=r['m'],mondo_label=r['nm'],short_names='; '.join(r['sh']),omim_ids='; '.join(r['omim']),association=assoc))
     names=[];mon=[];omim=[];used_src=set()
     for r in recs:
         for x in r['sh']:
@@ -106,6 +109,9 @@ for g,v in genes.items():
     stats['named' if keep else 'blank']+=1
     out.append(dict(gene=g,hgnc_id=h,historical_subtype_names='; '.join(keep),mondo_ids='; '.join(mon),
         omim_phenotype_ids='; '.join(dict.fromkeys(omim)),source=src[0],source_urls=' '.join(urls),notes=' | '.join(notes)))
+# One row per Mondo term, so merge.py can attach names to a single curation.
+tw=csv.DictWriter(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','data','subtype-terms.csv'),'w',newline=''),fieldnames=list(termrows[0].keys()),lineterminator='\n')
+tw.writeheader();tw.writerows(termrows)
 w=csv.DictWriter(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','data','subtype-names.csv'),'w',newline=''),fieldnames=list(out[0].keys()))
 w.writeheader();w.writerows(out);print(stats)
 for o in out: print(o['gene'],'=>',o['historical_subtype_names'],'||',o['notes'][:260])

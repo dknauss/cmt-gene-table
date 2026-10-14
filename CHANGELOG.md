@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-13 (Names and Trials Matched to Curations)
+
+Prompted by an independent review of the table.
+- Subtype names are now attached to the ClinGen curation they belong to (`curation_subtype_names`), using the OMIM phenotypes each curation includes. Other names for the gene go in `other_gene_names`; names from correlated associations only go in `unverified_names`. New columns: `curation_names_basis`, `clingen_included_omim`, `clingen_excluded_omim`, `other_condition_trials`. `historical_subtype_names` is unchanged and still gene-wide.
+- Corrected rows on the page: PMP22 (CMT1A and HNPP no longer share names), NEFL (CMT1F with the dominant curation, CMT2E with the recessive one), SCN11A (HSAN2D removed; it belongs to SCN9A), NTRK1 (HSAN5 removed), MFN2 (HMSN6A and CMT5 moved out of the main names), GDAP1 (CMT2H removed: correlated only), and others where the names changed.
+- Trials: the 13 CMT1A trials now appear only on the PMP22 CMT1A row; HNPP has none found. LTX-002 for SPTLC1 in ALS moved to `other_condition_trials`. `hand-checked-sources.csv` has a new `mondo_id` column for values that belong to one curation.
+- The monthly workflow is configured but has not completed a run yet. PanelApp notes now give the signed-off version.
+
 ## 2026-10-13 (Mondo Spelled as a Name)
 
 - Prose, source labels and notes now write the ontology's name as Mondo, its own spelling. IDs keep the `MONDO:` prefix, and column names and ClinGen's own `DISEASE ID (MONDO)` header are unchanged, so nothing that parses the files needs updating.

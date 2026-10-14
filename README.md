@@ -1,12 +1,12 @@
 # Open CMT Gene Table
 
-An open, downloadable table of the genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited neuropathies. For each gene it gives:
+An open, downloadable table of the genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited neuropathies. For each ClinGen gene-disease curation it gives:
 - the ClinGen evidence rating;
 - the disease and its Mondo ID;
-- the conventional subtype names (CMT1A, CMT2N, CMTX1, HSAN1D…);
+- the conventional subtype names (CMT1A, CMT2N, CMTX1, HSAN1D…) that belong to that curation, kept apart from other names linked to the same gene;
 - the matching OMIM phenotype IDs;
 - links to the GeneReviews chapter(s) and PanelApp gene pages, with PanelApp ratings;
-- the neuropathy type, registered clinical trials, and a one-sentence plain-language note, each traced to a cited source.
+- the neuropathy type, clinical trials found in ClinicalTrials.gov for that disease, and a one-sentence plain-language note, each traced to a cited source.
 
 It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
 
@@ -24,27 +24,46 @@ It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
 | `clingen_classification`, `classification_date` | ClinGen | Definitive, Strong, Moderate, Limited, Disputed… |
 | `clingen_report` | ClinGen | Link to the full curation |
 | `type_named_in_label` | Derived | The CMT type named in ClinGen's own label, if any |
-| `historical_subtype_names` | Mondo via Monarch | Conventional subtype names, separated by `; ` |
+| `curation_subtype_names` | ClinGen + Mondo | Subtype names for the disease rated in this row, separated by `; `. See "Names Matched to Curations" below |
+| `curation_names_basis` | Build notes | How those names were matched to the curation |
+| `other_gene_names` | Mondo via Monarch | Other subtype names with a causal link to the gene that this curation does not cover. The rating in this row does not apply to them |
+| `unverified_names` | Mondo via Monarch | Names that come only from Monarch correlated (not causal) associations. Kept for review, not presented as subtypes |
+| `clingen_included_omim`, `clingen_excluded_omim` | ClinGen curation page | The OMIM phenotypes ClinGen's panel included in, or excluded from, this curation |
+| `historical_subtype_names` | Mondo via Monarch | Every subtype name linked to the gene, causal or correlated, separated by `; `. Gene-wide, so it is the same for every curation of a gene; use `curation_subtype_names` for the names that go with a rating |
 | `subtype_mondo_ids` | Mondo via Monarch | The Mondo terms those names come from |
 | `omim_phenotype_ids` | Mondo cross-references | IDs only; no OMIM text is reproduced |
 | `subtype_review_note` | Build notes | Provenance and anything flagged for human review |
 | `genereviews` | NCBI GeneReviews report files | Chapter title and link for every GeneReviews chapter NCBI maps to the gene, separated by `; `. Starts `[overview only]` when every chapter is an overview |
 | `panelapp` | PanelApp APIs | Rating (Green/Amber/Red), panel, version and gene-page link on Genomics England panel 846 and PanelApp Australia panel 3070 |
 | `phenotype` | Hand-checked | One or more of axonal, demyelinating, intermediate, motor-predominant, sensory-predominant |
-| `therapy_programs` | Hand-checked | Registered trials of drugs, biologics or gene therapies for the gene's neuropathy, with phase, status and link |
+| `therapy_programs` | Hand-checked | Trials of drugs, biologics or gene therapies for the disease in this row, found by the ClinicalTrials.gov searches in the source URL, with phase, status and link. "None found" means none found by that search, not that no research exists. A registered trial is not a promising or available treatment |
+| `other_condition_trials` | Hand-checked | Trials that target the gene but in a different condition, such as LTX-002 for SPTLC1 in ALS |
 | `plain_note` | Hand-checked | One sentence in plain language, written for this table |
 
 Supporting files:
 - `data/clingen-cmt.csv` holds the ClinGen rows as downloaded.
-- `data/subtype-names.csv` holds the subtype-name lookup, with source URLs for every gene.
+- `data/subtype-names.csv` holds the gene-wide subtype-name lookup, with source URLs for every gene.
+- `data/subtype-terms.csv` has one row per Mondo term behind those names: its short names, OMIM IDs and whether Monarch links it to the gene causally or only by correlation.
+- `data/clingen-phenotypes.csv` records the OMIM phenotypes each ClinGen curation includes and excludes, read from the curation pages by `tools/fetch-clingen-phenotypes.py`.
+- `site/table-body.html` and `site/gene-aliases.json` are built for the table on cmt.blog by `tools/build-page-table.py` and `tools/fetch-aliases.py` (previous official HGNC symbols, so the page search finds SEPTIN9 by SEPT9).
 - `data/links.csv` holds the GeneReviews and PanelApp links, built by `tools/fetch-links.py`.
-- `data/hand-checked-sources.csv` holds every hand-checked value with its source URL, access date and a note. A value with two sources has two rows. `merge.py` refuses a row without a source URL.
+- `data/hand-checked-sources.csv` holds every hand-checked value with its source URL, access date and a note. A value with two sources has two rows. A row with a `mondo_id` applies only to that curation; a blank `mondo_id` applies to every curation of the gene. `merge.py` refuses a row without a source URL.
+
+### Names Matched to Curations
+
+A gene can have more than one ClinGen curation, and a gene's historical names don't all belong to the disease ClinGen rated. PMP22 is the clearest case: ClinGen rates it separately for CMT1A (caused by a duplication) and for HNPP (usually a deletion or a variant that stops the gene working), and it excludes CMT1E and Dejerine-Sottas disease from both. So names are attached per curation:
+
+1. If ClinGen lists the OMIM phenotypes it included, a name is attached when its Mondo term has one of those OMIM IDs.
+2. Otherwise, the names of the curation's own Mondo term are used.
+3. If neither works, the gene's causal names are used, and `curation_names_basis` says so.
+
+Names from Monarch correlated associations only are never attached to a curation; they go in `unverified_names`. Some are wrong for the gene (HSAN2D belongs to SCN9A, not SCN11A). Others are historical names with some support in the literature (CMT5 for MFN2, HSAN5 for NTRK1). They need a person to check them before they are promoted.
 
 ### GeneReviews and PanelApp Links
 
 These are built by script, so they can be regenerated.
 - **GeneReviews:** NCBI's weekly gene-to-chapter files (`NBKid_shortname_genesymbol.txt` and `GRtitle_shortname_NBKid.txt` from [ftp.ncbi.nlm.nih.gov/pub/GeneReviews](https://ftp.ncbi.nlm.nih.gov/pub/GeneReviews/)). Gene-specific chapters are listed first. Some genes are mapped to chapters about other conditions (for example SETX to ataxia chapters); those are kept because NCBI maps them. 50 genes have at least one chapter; 30 of those have overviews only; 20 have none.
-- **PanelApp:** [Genomics England panel 846](https://panelapp.genomicsengland.co.uk/panels/846/), "Hereditary neuropathy or pain disorder" (the signed-off NHS Genomic Medicine Service panel for test R78), and [PanelApp Australia panel 3070](https://panelapp-aus.org/panels/3070/), "Hereditary Neuropathy". The panel version at the time of the build is recorded in each value. Genomics England's legacy 100,000 Genomes panel 85 is not used. All 70 genes are on both panels. Genomics England links use its own gene symbols, which are older for some genes (AARS, GARS, MARS, WARS, YARS, SEPT9); matching is done by HGNC ID.
+- **PanelApp:** [Genomics England panel 846](https://panelapp.genomicsengland.co.uk/panels/846/), "Hereditary neuropathy or pain disorder" (the NHS Genomic Medicine Service panel for test R78), and [PanelApp Australia panel 3070](https://panelapp-aus.org/panels/3070/), "Hereditary Neuropathy". The panel version at the time of the build is recorded in each value. This is the latest version, not necessarily the signed-off one: on October 13, 2026 the build used v8.38, and the latest signed-off version was v8.30 (August 12, 2026). PanelApp's own terms of use govern reuse of its data. Genomics England's legacy 100,000 Genomes panel 85 is not used. All 70 genes are on both panels. Genomics England links use its own gene symbols, which are older for some genes (AARS, GARS, MARS, WARS, YARS, SEPT9); matching is done by HGNC ID.
 
 ### Hand-Checked Columns
 
@@ -101,12 +120,15 @@ The tools need only Python 3 and its standard library:
 ```bash
 python3 tools/build-clingen.py    # download ClinGen's file, keep the CMT panel's rows
 python3 tools/fetch-monarch.py    # cache Monarch/Mondo lookups in cache/
-python3 tools/build-subtypes.py   # derive subtype names
+python3 tools/build-subtypes.py   # derive subtype names (writes subtype-names.csv and subtype-terms.csv)
+python3 tools/fetch-clingen-phenotypes.py  # included/excluded OMIM phenotypes per curation (add --refresh)
 python3 tools/fetch-links.py      # GeneReviews and PanelApp links (add --refresh to bypass cache/)
 python3 tools/merge.py            # write data/cmt-genes.csv, adding data/hand-checked-sources.csv
+python3 tools/fetch-aliases.py    # previous HGNC symbols for the page search
+python3 tools/build-page-table.py # site/table-body.html for cmt.blog
 ```
 
-A monthly GitHub Actions job runs these steps and opens a pull request when ClinGen, Mondo, GeneReviews or PanelApp data change. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
+A monthly GitHub Actions job is configured to run these steps and open a pull request when ClinGen, Mondo, GeneReviews or PanelApp data change. As of October 13, 2026 it has not completed a run. The published table on cmt.blog is updated separately from `site/table-body.html`. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
 
 ## Sources and Licences
 

@@ -1,0 +1,77 @@
+{
+ "AARS1": [
+  "AARS"
+ ],
+ "ATP7A": [
+  "MNK"
+ ],
+ "BSCL2": [
+  "GNG3LG"
+ ],
+ "CADM3": [
+  "IGSF4B"
+ ],
+ "DNAJB2": [
+  "HSJ1"
+ ],
+ "DST": [
+  "BPAG1"
+ ],
+ "DYNC1H1": [
+  "DNECL",
+  "DNCL",
+  "DNCH1"
+ ],
+ "EGR2": [
+  "KROX20"
+ ],
+ "ELP1": [
+  "IKBKAP"
+ ],
+ "FIG4": [
+  "KIAA0274"
+ ],
+ "GARS1": [
+  "GARS"
+ ],
+ "HINT1": [
+  "PRKCNH1",
+  "HINT"
+ ],
+ "INF2": [
+  "C14orf151",
+  "C14orf173"
+ ],
+ "MARS1": [
+  "MARS"
+ ],
+ "MORC2": [
+  "ZCWCC1"
+ ],
+ "NGF": [
+  "NGFB"
+ ],
+ "RAB7A": [
+  "RAB7"
+ ],
+ "RETREG1": [
+  "FAM134B"
+ ],
+ "SCN11A": [
+  "SCN12A"
+ ],
+ "SEPTIN9": [
+  "MSF",
+  "SEPT9"
+ ],
+ "WARS1": [
+  "IFI53",
+  "WARS"
+ ],
+ "WNK1": [
+  "PRKWNK1"
+ ],
+ "YARS1": [
+  "YARS"
+ ]
+}

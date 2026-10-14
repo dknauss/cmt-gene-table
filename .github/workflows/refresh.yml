@@ -22,8 +22,11 @@ jobs:
           python3 tools/build-clingen.py
           python3 tools/fetch-monarch.py
           python3 tools/build-subtypes.py
+          python3 tools/fetch-clingen-phenotypes.py --refresh
           python3 tools/fetch-links.py --refresh
           python3 tools/merge.py
+          python3 tools/fetch-aliases.py
+          python3 tools/build-page-table.py
       - name: Open a pull request if the data changed
         uses: peter-evans/create-pull-request@v6
         with:
