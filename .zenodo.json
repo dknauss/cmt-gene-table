@@ -2,11 +2,31 @@
   "title": "Open CMT Gene Table",
   "upload_type": "dataset",
   "description": "<p>Genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited neuropathies, one row per ClinGen gene-disease curation, with the subtype names that go with each rating, inheritance, GeneReviews and PanelApp links, registered drug trials and a plain-language note. Every hand-checked value carries a source URL.</p><p>Explained and footnoted at <a href=\"https://cmt.blog/cmt-gene-table/\">cmt.blog/cmt-gene-table</a>. Browse and download at <a href=\"https://dknauss.github.io/cmt-gene-table/\">dknauss.github.io/cmt-gene-table</a>. Built from ClinGen (CC0) and the Mondo Disease Ontology (CC BY 4.0). General information, not medical advice.</p>",
-  "creators": [{ "name": "Knauss, Dan" }],
+  "creators": [
+    {
+      "name": "Knauss, Dan",
+      "orcid": "0000-0001-7007-5807"
+    }
+  ],
   "license": "cc-by-4.0",
-  "keywords": ["Charcot-Marie-Tooth disease", "inherited neuropathy", "ClinGen", "gene-disease validity", "Mondo", "rare disease"],
+  "keywords": [
+    "Charcot-Marie-Tooth disease",
+    "inherited neuropathy",
+    "ClinGen",
+    "gene-disease validity",
+    "Mondo",
+    "rare disease"
+  ],
   "related_identifiers": [
-    { "identifier": "https://cmt.blog/cmt-gene-table/", "relation": "isDocumentedBy", "resource_type": "publication" },
-    { "identifier": "https://dknauss.github.io/cmt-gene-table/", "relation": "isSupplementedBy", "resource_type": "dataset" }
+    {
+      "identifier": "https://cmt.blog/cmt-gene-table/",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication"
+    },
+    {
+      "identifier": "https://dknauss.github.io/cmt-gene-table/",
+      "relation": "isSupplementedBy",
+      "resource_type": "dataset"
+    }
   ]
 }
