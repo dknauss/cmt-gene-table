@@ -27,6 +27,11 @@
       "identifier": "https://dknauss.github.io/cmt-gene-table/",
       "relation": "isSupplementedBy",
       "resource_type": "dataset"
+    },
+    {
+      "identifier": "https://github.com/dknauss/cmt-gene-table",
+      "relation": "isSupplementTo",
+      "scheme": "url"
     }
   ]
 }
