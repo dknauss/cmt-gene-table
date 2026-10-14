@@ -12,6 +12,21 @@ It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
 
 **This is not medical advice and not a diagnostic tool.** It summarizes public curation data so that patients, families and writers can find their way around the gene names. Genetic results should be interpreted by a clinician or genetic counsellor. Follow the source links for the authoritative curation.
 
+## Downloads
+
+Browse, search and download the table at **[dknauss.github.io/cmt-gene-table](https://dknauss.github.io/cmt-gene-table/)**.
+
+| Format | Latest version | Notes |
+|---|---|---|
+| Excel | [cmt-genes.xlsx](https://github.com/dknauss/cmt-gene-table/releases/latest/download/cmt-genes.xlsx) | The table, a Columns sheet explaining every column, and an About sheet |
+| CSV | [cmt-genes.csv](https://github.com/dknauss/cmt-gene-table/releases/latest/download/cmt-genes.csv) | UTF-8, one row per ClinGen curation |
+| JSON | [cmt-genes.json](https://github.com/dknauss/cmt-gene-table/releases/latest/download/cmt-genes.json) | One object per row, same fields as the CSV |
+| Data Package | [datapackage.json](https://github.com/dknauss/cmt-gene-table/releases/latest/download/datapackage.json) | [Frictionless](https://frictionlessdata.io/) description of every column, for loading with types in R or Python |
+
+Each monthly update is a [release](https://github.com/dknauss/cmt-gene-table/releases) tagged by year and month (`v2026.10`), with these files attached. The links above always point to the latest release; link to a tagged release when you need a fixed version. To cite the table, use GitHub's "Cite this repository" button (from `CITATION.cff`).
+
+You can also [open the CSV in Datasette Lite](https://lite.datasette.io/?csv=https://dknauss.github.io/cmt-gene-table/cmt-genes.csv) to filter and query it in your browser.
+
 ## The Data
 
 [`data/cmt-genes.csv`](data/cmt-genes.csv) is the table. It has one row per ClinGen curation: 72 rows covering 70 genes. NEFL and PMP22 each have two curations.
@@ -47,6 +62,7 @@ Supporting files:
 - `data/subtype-terms.csv` has one row per Mondo term behind those names: its short names, OMIM IDs and whether Monarch links it to the gene causally or only by correlation.
 - `data/clingen-phenotypes.csv` records the OMIM phenotypes each ClinGen curation includes and excludes, read from the curation pages by `tools/fetch-clingen-phenotypes.py`.
 - `site/table-body.html` and `site/gene-aliases.json` are built for the table on cmt.blog by `tools/build-page-table.py` and `tools/fetch-aliases.py` (previous official HGNC symbols, so the page search finds SEPTIN9 by SEPT9).
+- `site/pages/index.html` is the template for the GitHub Pages site. `tools/build-exports.py` fills it and writes the downloads to `dist/` (not committed); the column descriptions in the downloads and on the site come from the column table above.
 - `data/links.csv` holds the GeneReviews and PanelApp links, built by `tools/fetch-links.py`.
 - `data/hand-checked-sources.csv` holds every hand-checked value with its source URL, access date and a note. A value with two sources has two rows. A row with a `mondo_id` applies only to that curation; a blank `mondo_id` applies to every curation of the gene. `merge.py` refuses a row without a source URL.
 
@@ -116,7 +132,7 @@ It leaves out genes the panel has not curated yet. NDRG1, LMNA, PRPS1, DHTKD1 an
 
 ## Rebuilding
 
-The tools need only Python 3 and its standard library:
+The data tools need only Python 3 and its standard library. `tools/build-exports.py` also needs `openpyxl` for the Excel file.
 
 ```bash
 python3 tools/build-clingen.py    # download ClinGen's file, keep the CMT panel's rows
@@ -127,9 +143,20 @@ python3 tools/fetch-links.py      # GeneReviews and PanelApp links (add --refres
 python3 tools/merge.py            # write data/cmt-genes.csv, adding data/hand-checked-sources.csv
 python3 tools/fetch-aliases.py    # previous HGNC symbols for the page search
 python3 tools/build-page-table.py # site/table-body.html for cmt.blog
+python3 tools/build-exports.py    # dist/: Excel, CSV, JSON, Data Package and the Pages site
 ```
 
 A monthly GitHub Actions job is configured to run these steps and open a pull request when ClinGen, Mondo, GeneReviews or PanelApp data change. As of October 13, 2026 it has not completed a run. The published table on cmt.blog is updated separately from `site/table-body.html`. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
+
+### Publishing
+
+Every push to `main` that changes the data rebuilds the [GitHub Pages site](https://dknauss.github.io/cmt-gene-table/) (`.github/workflows/publish.yml`). To publish a version, add a dated entry to `CHANGELOG.md`, update `version` and `date-released` in `CITATION.cff`, then push a tag:
+
+```bash
+git tag v2026.11 && git push origin v2026.11
+```
+
+The workflow creates the GitHub release with the four files attached, and Zenodo archives the release with a DOI.
 
 ## Sources and Licences
 

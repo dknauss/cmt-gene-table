@@ -1,0 +1,70 @@
+name: Publish downloads and site
+
+# Builds the Excel, CSV, JSON and Data Package files and the GitHub Pages
+# site from data/cmt-genes.csv. A push to main updates the site. Pushing a
+# version tag (v2026.10, v2026.11 …) also publishes a GitHub release with the
+# files attached, which Zenodo archives with a DOI.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/**"
+      - "site/**"
+      - "tools/build-exports.py"
+      - "README.md"
+      - ".github/workflows/publish.yml"
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install openpyxl==3.1.5 frictionless
+      - name: Work out the version
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          else
+            echo "VERSION=$(git describe --tags --always) (unreleased)" >> "$GITHUB_ENV"
+          fi
+      - run: python3 tools/build-exports.py
+      - name: Validate the data package
+        run: cd dist && frictionless validate datapackage.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Publish the release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="Open CMT Gene Table ${GITHUB_REF_NAME}. See CHANGELOG.md for what changed. Data: CC BY 4.0. Explained and footnoted at https://cmt.blog/cmt-gene-table/."
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "$notes"
+          gh release upload "$GITHUB_REF_NAME" dist/cmt-genes.xlsx dist/cmt-genes.csv dist/cmt-genes.json dist/datapackage.json --clobber
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

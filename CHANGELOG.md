@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-14 (Downloads and Web Page) — v2026.10
+
+- New [web page](https://dknauss.github.io/cmt-gene-table/) for the table: search (including previous gene symbols), sorting, per-row notes, trials and sources, and a guide to every column.
+- The table can now be downloaded as Excel (with Columns and About sheets), CSV, JSON and a Frictionless Data Package, built by `tools/build-exports.py`. Each monthly update will be a tagged release with these files attached.
+- Added `CITATION.cff` and `.zenodo.json` so the table can be cited and archived with a DOI.
+
 ## 2026-10-13 (Names and Trials Matched to Curations)
 
 Prompted by an independent review of the table.

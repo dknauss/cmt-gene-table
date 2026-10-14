@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this table, please cite the version you used."
+type: dataset
+title: "Open CMT Gene Table"
+abstract: >-
+  Genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited
+  neuropathies, one row per ClinGen gene-disease curation, with the subtype
+  names that go with each rating, inheritance, GeneReviews and PanelApp links,
+  registered drug trials and a plain-language note. Every hand-checked value
+  carries a source URL.
+authors:
+  - family-names: Knauss
+    given-names: Dan
+    website: "https://cmt.blog/"
+license: CC-BY-4.0
+url: "https://dknauss.github.io/cmt-gene-table/"
+repository-code: "https://github.com/dknauss/cmt-gene-table"
+keywords:
+  - Charcot-Marie-Tooth disease
+  - inherited neuropathy
+  - ClinGen
+  - gene-disease validity
+  - Mondo
+  - rare disease
+version: "v2026.10"
+date-released: "2026-10-14"

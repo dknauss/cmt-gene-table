@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open CMT Gene Table</title>
+<meta name="description" content="Genes linked to Charcot-Marie-Tooth disease and related inherited neuropathies, one row per ClinGen curation. Download as Excel, CSV or JSON.">
+<link rel="canonical" href="https://dknauss.github.io/cmt-gene-table/">
+<link rel="alternate" type="text/csv" href="cmt-genes.csv" title="Open CMT Gene Table (CSV)">
+<link rel="alternate" type="application/json" href="cmt-genes.json" title="Open CMT Gene Table (JSON)">
+<link rel="describedby" type="application/json" href="datapackage.json">
+<style>
+:root {
+  --bg: #fbfaf7; --fg: #1b2026; --muted: #5a6470; --line: #d9d6cf; --panel: #f1efe9;
+  --accent: #0f6b66; --accent-fg: #ffffff; --mark: #fff3bf;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161a1f; --fg: #e8e6e1; --muted: #a3acb6; --line: #39404a; --panel: #1f252c;
+    --accent: #7fd1c9; --accent-fg: #0d1a19; --mark: #4a4221; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 32px 16px 64px; }
+header p { max-width: 70ch; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 1.3rem; margin: 40px 0 12px; }
+.meta { color: var(--muted); font-size: .92rem; }
+.downloads { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin: 24px 0; }
+.downloads h2 { margin: 0 0 8px; font-size: 1.05rem; }
+.downloads ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.btn { display: inline-block; padding: .45em .9em; border-radius: 6px; background: var(--accent); color: var(--accent-fg);
+  text-decoration: none; font-weight: 600; }
+.btn:hover { filter: brightness(1.08); }
+.small { font-size: .88rem; color: var(--muted); }
+.cite { font-size: .9rem; }
+.cite code { white-space: normal; }
+.tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 24px 0 8px; }
+.tools label { font-weight: 600; }
+.tools input { font: inherit; padding: .4em .6em; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); min-width: min(320px, 100%); }
+.scroll { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+caption { text-align: left; padding: 10px 12px; color: var(--muted); caption-side: top; }
+th, td { text-align: left; vertical-align: top; padding: 8px 12px; border-top: 1px solid var(--line); }
+thead th { position: sticky; top: 0; background: var(--panel); border-top: 0; white-space: nowrap; }
+thead button { font: inherit; font-weight: 700; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+thead button::after { content: " ↕"; color: var(--muted); font-weight: 400; }
+thead th[aria-sort="ascending"] button::after { content: " ↑"; }
+thead th[aria-sort="descending"] button::after { content: " ↓"; }
+tbody th { white-space: nowrap; }
+.minor { color: var(--muted); font-style: italic; font-size: .9em; }
+details summary { cursor: pointer; color: var(--accent); }
+details p { margin: 8px 0; max-width: 60ch; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.empty { padding: 16px 12px; }
+.cols td, .cols th { font-size: .9rem; }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Open CMT Gene Table</h1>
+  <p>The genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited neuropathies, with one row for each gene–disease link that ClinGen’s expert panel has rated: {{ROWS}} rows covering {{GENES}} genes. Each row gives the subtype names that go with that rating, its inheritance pattern, where the evidence stands, and links to GeneReviews, PanelApp and registered drug trials.</p>
+  <p>This page is the data home. For what the ratings mean, how names were matched and what the table leaves out, read <a href="{{BLOG}}">the explained, footnoted version on cmt.blog</a>. It is general information, not medical advice.</p>
+  <p class="meta">Version {{VERSION}} · built {{BUILT}} · <a href="{{REPO}}">source, history and every hand-checked source on GitHub</a></p>
+</header>
+
+<section class="downloads" aria-label="Downloads">
+  <div>
+    <h2>Download</h2>
+    <ul>
+      <li><a class="btn" href="cmt-genes.xlsx" download>Excel (.xlsx)</a> <span class="small">{{SIZE_XLSX}}, includes a column guide</span></li>
+      <li><a class="btn" href="cmt-genes.csv" download>CSV</a> <span class="small">{{SIZE_CSV}}, UTF-8</span></li>
+      <li><a class="btn" href="cmt-genes.json" download>JSON</a> <span class="small">{{SIZE_JSON}}, one object per row</span></li>
+    </ul>
+  </div>
+  <div>
+    <h2>Use</h2>
+    <ul>
+      <li><a href="datapackage.json">Data package</a> <span class="small">(Frictionless; column types and descriptions for R and Python)</span></li>
+      <li><a href="https://lite.datasette.io/?csv=https://dknauss.github.io/cmt-gene-table/cmt-genes.csv">Explore and filter in Datasette Lite</a> <span class="small">(runs in your browser)</span></li>
+      <li><a href="{{REPO}}/releases">Every released version</a> <span class="small">(stable files for each monthly update)</span></li>
+    </ul>
+  </div>
+  <div class="cite">
+    <h2>Cite and reuse</h2>
+    <p>Data released under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Please credit: <code>{{CREDIT}}</code>. Cite the version you used; GitHub’s “Cite this repository” button gives a ready-made citation.</p>
+  </div>
+</section>
+
+<div class="tools">
+  <label for="q">Search the table</label>
+  <input id="q" type="search" placeholder="Gene, subtype, Mondo ID, inheritance…" autocomplete="off" aria-describedby="count">
+  <span id="count" class="small" role="status" aria-live="polite"></span>
+</div>
+<p class="small">Search also matches previous official gene symbols (SEPT9 finds SEPTIN9). Select a column heading to sort.</p>
+
+<div class="scroll">
+<table id="genes">
+  <caption>Genes linked to CMT and related neuropathies, one row per ClinGen curation</caption>
+  <thead><tr>
+    <th scope="col" aria-sort="ascending"><button type="button" data-col="0">Gene</button></th>
+    <th scope="col"><button type="button" data-col="1">Subtype names</button></th>
+    <th scope="col"><button type="button" data-col="2">Disease rated by ClinGen</button></th>
+    <th scope="col"><button type="button" data-col="3">Inheritance</button></th>
+    <th scope="col"><button type="button" data-col="4">ClinGen rating</button></th>
+    <th scope="col"><button type="button" data-col="5">Type</button></th>
+    <th scope="col">Notes, trials and sources</th>
+  </tr></thead>
+  <tbody>
+{{TBODY}}
+  </tbody>
+</table>
+<p class="empty" id="empty" hidden>No gene in this table matches. It may not be curated by ClinGen’s CMT panel yet. Try <a href="https://www.ncbi.nlm.nih.gov/books/NBK1358/">GeneReviews</a> or <a href="https://panelapp.genomicsengland.co.uk/panels/846/">PanelApp</a>.</p>
+</div>
+
+<h2 id="columns">What Each Column Means</h2>
+<p>The downloads have more columns than the table above. This is the full list.</p>
+<div class="scroll">
+<table class="cols">
+  <thead><tr><th scope="col">Column</th><th scope="col">Source</th><th scope="col">Meaning</th></tr></thead>
+  <tbody>
+{{COLUMNS}}
+  </tbody>
+</table>
+</div>
+
+<footer class="small">
+  <p>Built from ClinGen (CC0), the Mondo Disease Ontology via the Monarch Initiative (CC BY 4.0), GeneReviews (linked, not copied), Genomics England PanelApp, PanelApp Australia and ClinicalTrials.gov. A registered trial is not a promising or available treatment. Talk to a clinician or genetic counsellor about any result.</p>
+  <p>Maintained by Dan Knauss at <a href="https://cmt.blog/">cmt.blog</a>. Corrections are welcome as <a href="{{REPO}}/issues">GitHub issues</a>.</p>
+</footer>
+</div>
+
+<script>
+(() => {
+  const ALIASES = {{ALIASES}};
+  const RANK = { Definitive: 1, Strong: 2, Moderate: 3, Limited: 4, Disputed: 5, Refuted: 6 };
+  const q = document.getElementById('q');
+  const tbody = document.querySelector('#genes tbody');
+  const rows = [...tbody.rows];
+  const count = document.getElementById('count');
+  const empty = document.getElementById('empty');
+  const total = rows.length;
+  const aliasHit = (term) => Object.entries(ALIASES)
+    .filter(([, old]) => old.some(a => a.toLowerCase().includes(term)))
+    .map(([gene]) => gene.toLowerCase());
+  const filter = () => {
+    const term = q.value.trim().toLowerCase();
+    const extra = term ? aliasHit(term) : [];
+    let shown = 0;
+    for (const tr of rows) {
+      const gene = tr.cells[0].textContent.trim().toLowerCase();
+      const hit = !term || tr.dataset.search.includes(term) || extra.includes(gene);
+      tr.hidden = !hit;
+      if (hit) shown++;
+    }
+    count.textContent = term ? `${shown} of ${total} rows` : `${total} rows`;
+    empty.hidden = shown > 0;
+  };
+  q.addEventListener('input', filter);
+  filter();
+
+  const heads = [...document.querySelectorAll('#genes thead th')];
+  document.querySelectorAll('#genes thead button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const col = +btn.dataset.col;
+      const th = btn.parentElement;
+      const dir = th.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+      heads.forEach(h => h.removeAttribute('aria-sort'));
+      th.setAttribute('aria-sort', dir);
+      const key = (tr) => {
+        const cell = tr.cells[col];
+        if (col === 4) return String(RANK[cell.dataset.sort] || 9) + cell.textContent;
+        return cell.textContent.trim().toLowerCase();
+      };
+      rows.sort((a, b) => key(a).localeCompare(key(b), 'en', { numeric: true }) * (dir === 'ascending' ? 1 : -1));
+      rows.forEach(tr => tbody.appendChild(tr));
+    });
+  });
+})();
+</script>
+</body>
+</html>
