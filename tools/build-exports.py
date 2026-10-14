@@ -156,6 +156,30 @@ def build_datapackage(rows, fields, guide, ver):
     }
 
 
+def jsonld(rows, ver):
+    """schema.org Dataset, for Google Dataset Search and link previews."""
+    files = [("cmt-genes.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), ("cmt-genes.csv", "text/csv"), ("cmt-genes.json", "application/json")]
+    return {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": TITLE,
+        "description": "Genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited neuropathies, one row per ClinGen gene-disease curation, with the subtype names that go with each rating, inheritance, GeneReviews and PanelApp links, registered drug trials and a plain-language note. Every hand-checked value carries a source URL.",
+        "url": PAGES,
+        "sameAs": [BLOG, REPO],
+        "identifier": "https://doi.org/10.5281/zenodo.23371750",
+        "version": ver,
+        "dateModified": datetime.date.today().isoformat(),
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "isAccessibleForFree": True,
+        "keywords": ["Charcot-Marie-Tooth disease", "inherited neuropathy", "ClinGen", "gene-disease validity", "Mondo", "rare disease"],
+        "creator": {"@type": "Person", "name": "Dan Knauss", "url": "https://cmt.blog/", "sameAs": "https://orcid.org/0000-0001-7007-5807"},
+        "isBasedOn": ["https://search.clinicalgenome.org/kb/gene-validity", "https://mondo.monarchinitiative.org/"],
+        "distribution": [{"@type": "DataDownload", "encodingFormat": t, "contentUrl": PAGES + n} for n, t in files],
+        "variableMeasured": ["gene", "inheritance", "ClinGen classification", "subtype names", "Mondo ID"],
+        "size": f"{len(rows)} rows",
+    }
+
+
 def build_page(rows, fields, guide, ver, sizes):
     body = []
     for r in rows:
@@ -202,6 +226,7 @@ def build_page(rows, fields, guide, ver, sizes):
                .replace("{{TBODY}}", "\n".join(body))
                .replace("{{ALIASES}}", aliases)
                .replace("{{COLUMNS}}", columns_html)
+               .replace("{{JSONLD}}", json.dumps(jsonld(rows, ver), ensure_ascii=False, indent=1).replace("</", "<\\/"))
                .replace("{{REPO}}", REPO)
                .replace("{{BLOG}}", BLOG)
                .replace("{{CREDIT}}", html.escape(CREDIT))
@@ -233,7 +258,7 @@ def main():
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(build_page(rows, fields, guide, ver, sizes))
     for name in os.listdir(os.path.join(ROOT, "site", "pages")):
-        if name.endswith(".svg"):
+        if name.endswith((".svg", ".png")):
             shutil.copyfile(os.path.join(ROOT, "site", "pages", name), os.path.join(DIST, name))
     open(os.path.join(DIST, ".nojekyll"), "w").close()
     print(f"{len(rows)} rows, version {ver}: " + ", ".join(sorted(os.listdir(DIST))))
