@@ -1,5 +1,7 @@
 # Open CMT Gene Table
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23371750.svg)](https://doi.org/10.5281/zenodo.23371750)
+
 An open, downloadable table of the genes linked to Charcot-Marie-Tooth disease (CMT) and related inherited neuropathies. For each ClinGen gene-disease curation it gives:
 - the ClinGen evidence rating;
 - the disease and its Mondo ID;
@@ -23,7 +25,7 @@ Browse, search and download the table at **[dknauss.github.io/cmt-gene-table](ht
 | JSON | [cmt-genes.json](https://github.com/dknauss/cmt-gene-table/releases/latest/download/cmt-genes.json) | One object per row, same fields as the CSV |
 | Data Package | [datapackage.json](https://github.com/dknauss/cmt-gene-table/releases/latest/download/datapackage.json) | [Frictionless](https://frictionlessdata.io/) description of every column, for loading with types in R or Python |
 
-Each monthly update is a [release](https://github.com/dknauss/cmt-gene-table/releases) tagged by year and month (`v2026.10`), with these files attached. The links above always point to the latest release; link to a tagged release when you need a fixed version. To cite the table, use GitHub's "Cite this repository" button (from `CITATION.cff`).
+Each monthly update is a [release](https://github.com/dknauss/cmt-gene-table/releases) tagged by year and month (`v2026.10`), with these files attached. The links above always point to the latest release; link to a tagged release when you need a fixed version. To cite the table, use GitHub's "Cite this repository" button (from `CITATION.cff`). Every release is archived at Zenodo: [10.5281/zenodo.23371750](https://doi.org/10.5281/zenodo.23371750) always resolves to the latest version, and each version has its own DOI (v2026.10 is [10.5281/zenodo.23371751](https://doi.org/10.5281/zenodo.23371751)).
 
 You can also [open the CSV in Datasette Lite](https://lite.datasette.io/?csv=https://dknauss.github.io/cmt-gene-table/cmt-genes.csv) to filter and query it in your browser.
 

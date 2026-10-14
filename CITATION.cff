@@ -14,6 +14,7 @@ authors:
     orcid: "https://orcid.org/0000-0001-7007-5807"
     website: "https://cmt.blog/"
 license: CC-BY-4.0
+doi: "10.5281/zenodo.23371750"
 url: "https://dknauss.github.io/cmt-gene-table/"
 repository-code: "https://github.com/dknauss/cmt-gene-table"
 keywords:

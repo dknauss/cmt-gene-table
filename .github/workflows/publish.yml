@@ -42,7 +42,12 @@ jobs:
           if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
             echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
           else
-            echo "VERSION=$(git describe --tags --always) (unreleased)" >> "$GITHUB_ENV"
+            last=$(git describe --tags --abbrev=0 2>/dev/null || echo "unreleased")
+            if [ "$(git rev-list -n1 "$last" 2>/dev/null)" = "$(git rev-parse HEAD)" ]; then
+              echo "VERSION=${last}" >> "$GITHUB_ENV"
+            else
+              echo "VERSION=${last} + later edits" >> "$GITHUB_ENV"
+            fi
           fi
       - run: python3 tools/build-exports.py
       - name: Validate the data package
