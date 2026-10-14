@@ -3,7 +3,9 @@
 
 Reads data/cmt-genes.csv and writes site/table-body.html. Each row shows the
 subtype names attached to that curation. Other names linked to the gene, but
-not covered by the rating in that row, follow in italics. Rows that need a
+not covered by the rating in that row, follow in italics, as do older or
+unverified names (from correlated associations only). Names rejected in
+data/name-reviews.csv are left out. Rows that need a
 note get a [[FN:KEY]] placeholder, which the page's footnote IDs replace.
 """
 import csv, html, os
@@ -17,11 +19,17 @@ out = []
 for r in rows:
     names = [x.strip() for x in r["curation_subtype_names"].split(";") if x.strip()]
     other = [x.strip() for x in r["other_gene_names"].split(";") if x.strip()]
+    older = [x.strip() for x in r["unverified_names"].split(";") if x.strip()]
     cell = html.escape(", ".join(names)) if names else "—"
     if r["gene"] in NOTE:
         cell += f"[[FN:{r['gene']}]]"
+    extra = []
     if other:
-        cell += "<br><em>Also linked to this gene: " + html.escape(", ".join(other)) + "</em>"
+        extra.append("Other names, not rated here: " + html.escape(", ".join(other)) + ".")
+    if older:
+        extra.append("Older or unverified: " + html.escape(", ".join(older)) + ".")
+    if extra:
+        cell += "<br><em>" + " ".join(extra) + "</em>"
     year = r["classification_date"][:4]
     out.append(
         "<tr>"

@@ -28,6 +28,7 @@ It is maintained by Dan Knauss for [cmt.blog](https://cmt.blog).
 | `curation_names_basis` | Build notes | How those names were matched to the curation |
 | `other_gene_names` | Mondo via Monarch | Other subtype names with a causal link to the gene that this curation does not cover. The rating in this row does not apply to them |
 | `unverified_names` | Mondo via Monarch | Names that come only from Monarch correlated (not causal) associations. Kept for review, not presented as subtypes |
+| `rejected_names` | Hand-checked | Names checked and found not to belong to the gene, from `data/name-reviews.csv` (each with a source URL). Left off the page |
 | `clingen_included_omim`, `clingen_excluded_omim` | ClinGen curation page | The OMIM phenotypes ClinGen's panel included in, or excluded from, this curation |
 | `historical_subtype_names` | Mondo via Monarch | Every subtype name linked to the gene, causal or correlated, separated by `; `. Gene-wide, so it is the same for every curation of a gene; use `curation_subtype_names` for the names that go with a rating |
 | `subtype_mondo_ids` | Mondo via Monarch | The Mondo terms those names come from |
@@ -57,7 +58,7 @@ A gene can have more than one ClinGen curation, and a gene's historical names do
 2. Otherwise, the names of the curation's own Mondo term are used.
 3. If neither works, the gene's causal names are used, and `curation_names_basis` says so.
 
-Names from Monarch correlated associations only are never attached to a curation; they go in `unverified_names`. Some are wrong for the gene (HSAN2D belongs to SCN9A, not SCN11A). Others are historical names with some support in the literature (CMT5 for MFN2, HSAN5 for NTRK1). They need a person to check them before they are promoted.
+Names from Monarch correlated associations only are never attached to a curation; they go in `unverified_names`. Some are wrong for the gene (HSAN2D belongs to SCN9A, not SCN11A). Others are historical names with some support in the literature (CMT5 for MFN2, HSAN5 for NTRK1). They need a person to check them before they are promoted. On the cmt.blog page they appear in italics as "older or unverified", apart from the main names. Names checked and found wrong for the gene are recorded in `data/name-reviews.csv` and left off the page.
 
 ### GeneReviews and PanelApp Links
 

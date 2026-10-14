@@ -10,6 +10,8 @@
 - other_gene_names are causal subtype names for the gene that this curation
   does not cover. unverified_names come only from Monarch correlated (not
   causal) associations; they are kept for review, not presented as subtypes.
+  rejected_names were checked by hand and found not to belong to the gene
+  (data/name-reviews.csv, each with a source URL).
 - historical_subtype_names, subtype_mondo_ids and omim_phenotype_ids are the
   gene-wide lists from data/subtype-names.csv, kept for compatibility.
 - genereviews and panelapp come from data/links.csv (tools/fetch-links.py).
@@ -27,7 +29,7 @@ FIELDS = [
     "gene", "hgnc_id", "clingen_disease_label", "mondo_id", "inheritance",
     "clingen_classification", "classification_date", "clingen_report",
     "type_named_in_label", "curation_subtype_names", "curation_names_basis",
-    "other_gene_names", "unverified_names", "clingen_included_omim",
+    "other_gene_names", "unverified_names", "rejected_names", "clingen_included_omim",
     "clingen_excluded_omim", "historical_subtype_names", "subtype_mondo_ids",
     "omim_phenotype_ids", "subtype_review_note", "phenotype", "genereviews",
     "panelapp", "therapy_programs", "other_condition_trials", "plain_note",
@@ -54,6 +56,12 @@ base = read("clingen-cmt.csv")
 sub = {r["gene"]: r for r in read("subtype-names.csv")}
 links = {r["gene"]: r for r in read("links.csv")}
 pheno = {(r["gene"], r["mondo_id"]): r for r in read("clingen-phenotypes.csv")}
+rejected = {}
+for n in read("name-reviews.csv"):
+    if n["decision"] == "rejected":
+        if not n["source_url"].startswith("http"):
+            raise SystemExit(f"name-reviews.csv: {n['gene']} {n['name']} has no source URL")
+        rejected.setdefault(n["gene"], []).append(n["name"])
 terms = {}
 for t in read("subtype-terms.csv"):
     terms.setdefault(t["gene"], []).append(t)
@@ -101,7 +109,9 @@ def curation_names(r):
     for t in gt:
         names = [n for n in split(t["short_names"]) if n not in cur]
         add(unverified if t["association"] == "correlated" else other, names)
-    return cur, basis, other, unverified, p
+    bad = rejected.get(r["gene"], [])
+    return ([n for n in cur if n not in bad], basis, [n for n in other if n not in bad],
+            [n for n in unverified if n not in bad], [n for n in bad], p)
 
 
 with open(os.path.join(D, "cmt-genes.csv"), "w", newline="", encoding="utf-8") as f:
@@ -110,11 +120,12 @@ with open(os.path.join(D, "cmt-genes.csv"), "w", newline="", encoding="utf-8") a
     for r in base:
         s = sub.get(r["gene"], {})
         out = {k: r.get(k, "") for k in FIELDS}
-        cur, basis, other, unverified, p = curation_names(r)
+        cur, basis, other, unverified, bad, p = curation_names(r)
         out["curation_subtype_names"] = "; ".join(cur)
         out["curation_names_basis"] = basis
         out["other_gene_names"] = "; ".join(other)
         out["unverified_names"] = "; ".join(unverified)
+        out["rejected_names"] = "; ".join(bad)
         out["clingen_included_omim"] = p.get("included_omim", "")
         out["clingen_excluded_omim"] = p.get("excluded_omim", "")
         out["historical_subtype_names"] = s.get("historical_subtype_names", "")

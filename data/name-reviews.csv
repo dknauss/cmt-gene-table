@@ -1,0 +1,2 @@
+gene,name,decision,source_url,reviewed,note
+SCN11A,HSAN2D,rejected,https://www.ncbi.nlm.nih.gov/books/NBK1358/table/cmt.T.hereditary_sensory_neuropathy_hsn/,2026-10-13,"HSAN2D is the SCN9A subtype; SCN11A causes HSAN7. The name came from a Monarch correlated association with MONDO:0009459, a term usually tied to SCN9A."
