@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-03 (Monthly Refresh)
+
+- KIF1B (CMT2A1): ClinGen reclassified the gene-disease link from Limited to Disputed on 2026-10-19 (curation CCID:005229). The panel's reasons: one affected family only, MFN2 (in the same 1p36.2 linkage region) was not excluded in that family, and two later reported variants were too common in the general population to support the link. The `plain_note` now says so. PanelApp still rates KIF1B Red on both panels.
+- HSPB1 and PLEKHG5: ClinGen's curation pages now list the OMIM phenotypes they included (HSPB1: OMIM:606595, OMIM:608634; PLEKHG5: OMIM:615376, OMIM:611067), so `clingen_included_omim` is now filled for both.
+- BSCL2: the GeneReviews chapter is now titled "BSCL2-Related Motor Neuron Disorders / Seipinopathy"; the link is unchanged.
+- No other rows changed. Still 72 curations covering 70 genes.
+
 ## 2026-10-14 (Downloads and Web Page) — v2026.10
 
 - New [web page](https://dknauss.github.io/cmt-gene-table/) for the table: search (including previous gene symbols), sorting, per-row notes, trials and sources, and a guide to every column.
