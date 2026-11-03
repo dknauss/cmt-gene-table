@@ -7,7 +7,9 @@ def get(url,fn):
     for a in range(6):
         try:
             d=json.load(urllib.request.urlopen(url,timeout=60)); json.dump(d,open(p,'w')); return d
-        except Exception as e: print('retry',url,e); time.sleep(5*2**a)
+        except Exception as e:
+            if getattr(e,'code',0) in range(400,500) and e.code!=429: raise SystemExit('fail (client error, not retrying) '+url+' '+str(e))
+            print('retry',url,e); time.sleep(5*2**a)
     raise SystemExit('fail '+url)
 rows=list(csv.DictReader(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','data','clingen-cmt.csv'))))
 mondos=set()
