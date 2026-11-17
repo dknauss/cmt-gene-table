@@ -8,9 +8,12 @@ Writes to dist/ (not committed):
   dist/cmt-genes.json       one object per row
   dist/datapackage.json     Frictionless Data Package describing every column
   dist/index.html           the GitHub Pages site: searchable table and downloads
+  dist/candidate-genes.csv  the separate candidate list, unchanged (also .json)
+  dist/candidate-genes-excluded.csv  screened genes left out of it, with reasons
 
-The column descriptions come from the column table in README.md, so the
-README stays the single place to edit them.
+The column descriptions come from the column tables in README.md, so the
+README stays the single place to edit them. The build stops if a gene is in
+both the main table and the candidate list.
 
 Usage: python3 tools/build-exports.py [--version v2026.10]
 The version defaults to the VERSION environment variable, then to "dev".
@@ -24,7 +27,7 @@ PAGES = "https://dknauss.github.io/cmt-gene-table/"
 BLOG = "https://cmt.blog/cmt-gene-table/"
 TITLE = "Open CMT Gene Table"
 CREDIT = "Open CMT Gene Table (cmt.blog), using ClinGen (CC0) and Mondo (CC BY 4.0)"
-INH = {"AD": "Dominant", "AR": "Recessive", "SD": "Semidominant", "XL": "X-linked"}
+INH = {"AD": "Dominant", "AR": "Recessive", "SD": "Semidominant", "XL": "X-linked", "MT": "Mitochondrial"}
 
 
 def version():
@@ -33,11 +36,24 @@ def version():
     return os.environ.get("VERSION") or "dev"
 
 
-def column_guide(fields):
-    """Read the README column table: {column: (source, description)}."""
+def column_guide(fields, start="## The Data", stop="## "):
+    """Read a README column table: {column: (source, description)}.
+
+    Only lines from the heading `start` to the next heading that begins with
+    `stop` are read, so the main and candidate tables can share column names.
+    """
     guide = {}
     text = open(os.path.join(ROOT, "README.md"), encoding="utf-8").read()
+    lines, inside = [], False
     for line in text.splitlines():
+        if line.strip() == start:
+            inside = True
+            continue
+        if inside and line.startswith(stop) and not line.startswith(stop + "#"):
+            break
+        if inside:
+            lines.append(line)
+    for line in lines:
         m = re.match(r"^\|\s*(`[^|]+`)\s*\|\s*([^|]+?)\s*\|\s*(.+?)\s*\|$", line)
         if not m:
             continue
@@ -72,7 +88,7 @@ def names(value):
     return [x.strip() for x in value.split(";") if x.strip()]
 
 
-def build_xlsx(rows, fields, guide, ver, path):
+def build_xlsx(rows, fields, guide, ver, path, cand=None):
     from openpyxl import Workbook
     from openpyxl.styles import Alignment, Font
     from openpyxl.utils import get_column_letter
@@ -106,12 +122,31 @@ def build_xlsx(rows, fields, guide, ver, path):
     for row in cg.iter_rows(min_row=2):
         row[2].alignment = Alignment(wrap_text=True, vertical="top")
 
+    if cand:
+        cs = wb.create_sheet("Candidates")
+        cs.append(cand["fields"])
+        for r in cand["rows"]:
+            cs.append([r[f] for f in cand["fields"]])
+        for c in cs[1]:
+            c.font = Font(bold=True)
+        cs.freeze_panes = "B2"
+        cs.auto_filter.ref = cs.dimensions
+        for i, f in enumerate(cand["fields"], 1):
+            longest = max([len(f)] + [len(r[f]) for r in cand["rows"]])
+            cs.column_dimensions[get_column_letter(i)].width = min(max(10, longest + 2), 60)
+        for row in cs.iter_rows(min_row=2):
+            for c in row:
+                c.alignment = Alignment(vertical="top", wrap_text=len(str(c.value or "")) > 60)
+        for f in cand["fields"]:
+            cg.append([f"Candidates: {f}", cand["guide"][f][0], cand["guide"][f][1]])
+
     ab = wb.create_sheet("About")
     for line in [
         [TITLE],
         ["Version", ver],
         ["Built", datetime.date.today().isoformat()],
         ["Rows", f"{len(rows)} ClinGen curations covering {len({r['gene'] for r in rows})} genes"],
+        ["Candidates sheet", f"{len(cand['rows'])} genes reported with CMT-spectrum disease but not curated by ClinGen for it. A separate list; see the README" if cand else ""],
         ["Explained and footnoted at", BLOG],
         ["Source code, history and every hand-checked source", REPO],
         ["Licence", "Data: CC BY 4.0. Credit: " + CREDIT],
@@ -124,7 +159,7 @@ def build_xlsx(rows, fields, guide, ver, path):
     wb.save(path)
 
 
-def build_datapackage(rows, fields, guide, ver):
+def build_datapackage(rows, fields, guide, ver, cand):
     types = {"classification_date": "date"}
     return {
         "name": "open-cmt-gene-table",
@@ -151,6 +186,28 @@ def build_datapackage(rows, fields, guide, ver):
             "schema": {
                 "fields": [{"name": f, "type": types.get(f, "string"), "description": f"{guide[f][1]} (Source: {guide[f][0]}.)"} for f in fields],
                 "primaryKey": ["gene", "mondo_id"],
+            },
+        }, {
+            "name": "candidate-genes",
+            "path": "candidate-genes.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "description": "Genes reported to cause CMT-spectrum disease that ClinGen has not curated for it. A separate list from cmt-genes; no gene is in both.",
+            "schema": {
+                "fields": [{"name": f, "type": "date" if f == "date_checked" else "string", "description": f"{cand['guide'][f][1]} (Source: {cand['guide'][f][0]}.)"} for f in cand["fields"]],
+                "primaryKey": ["gene"],
+            },
+        }, {
+            "name": "candidate-genes-excluded",
+            "path": "candidate-genes-excluded.csv",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "description": "Genes screened for the candidate list and left out, with a category and reason.",
+            "schema": {
+                "fields": [{"name": f, "type": "date" if f == "date_checked" else "string"} for f in cand["excluded_fields"]],
+                "primaryKey": ["gene"],
             },
         }],
     }
@@ -180,7 +237,30 @@ def jsonld(rows, ver):
     }
 
 
-def build_page(rows, fields, guide, ver, sizes):
+def candidate_body(cand):
+    body = []
+    for r in cand["rows"]:
+        status = "Not curated" if r["clingen_status"] == "not curated" else "Curated for another disease"
+        more = [f"<p><strong>ClinGen:</strong> {html.escape(r['clingen_status'])}</p>",
+                f"<p><strong>PanelApp:</strong> {html.escape(r['panelapp'])}</p>"]
+        if r["omim_phenotype"]:
+            more.append(f"<p><strong>OMIM:</strong> {html.escape(r['omim_phenotype'])}</p>")
+        src = f'<a href="https://pubmed.ncbi.nlm.nih.gov/{html.escape(r["key_pmid"])}/">{html.escape(r["key_source"])}</a>'
+        search = " ".join([r["gene"], r["hgnc_id"], r["reported_disease"], r["omim_phenotype"], INH.get(r["inheritance"], r["inheritance"]), status])
+        body.append(
+            f'<tr data-search="{html.escape(search.lower())}">'
+            f'<th scope="row">{html.escape(r["gene"])}</th>'
+            f"<td>{html.escape(r['reported_disease'])}</td>"
+            f"<td>{INH.get(r['inheritance'], html.escape(r['inheritance']))}</td>"
+            f'<td><a href="https://search.clinicalgenome.org/kb/genes/{html.escape(r["hgnc_id"])}">{status}</a></td>'
+            f"<td>{html.escape(r['evidence_note'])}<br><span class=\"minor\">{src}</span></td>"
+            f"<td><details><summary>More<span class=\"sr\"> about {html.escape(r['gene'])}</span></summary>{''.join(more)}</details></td>"
+            "</tr>"
+        )
+    return "\n".join(body)
+
+
+def build_page(rows, fields, guide, ver, sizes, cand):
     body = []
     for r in rows:
         main = names(r["curation_subtype_names"])
@@ -224,6 +304,9 @@ def build_page(rows, fields, guide, ver, sizes):
                .replace("{{ROWS}}", str(len(rows)))
                .replace("{{GENES}}", str(genes))
                .replace("{{TBODY}}", "\n".join(body))
+               .replace("{{CAND_TBODY}}", candidate_body(cand))
+               .replace("{{CAND_GENES}}", str(len(cand["rows"])))
+               .replace("{{CAND_EXCLUDED}}", str(len(cand["excluded"])))
                .replace("{{ALIASES}}", aliases)
                .replace("{{COLUMNS}}", columns_html)
                .replace("{{JSONLD}}", json.dumps(jsonld(rows, ver), ensure_ascii=False, indent=1).replace("</", "<\\/"))
@@ -232,7 +315,8 @@ def build_page(rows, fields, guide, ver, sizes):
                .replace("{{CREDIT}}", html.escape(CREDIT))
                .replace("{{SIZE_XLSX}}", kb("cmt-genes.xlsx"))
                .replace("{{SIZE_CSV}}", kb("cmt-genes.csv"))
-               .replace("{{SIZE_JSON}}", kb("cmt-genes.json")))
+               .replace("{{SIZE_JSON}}", kb("cmt-genes.json"))
+               .replace("{{SIZE_CAND}}", kb("candidate-genes.csv")))
 
 
 def main():
@@ -244,19 +328,38 @@ def main():
         rows = list(reader)
     guide = column_guide(fields)
 
+    cpath = os.path.join(ROOT, "data", "candidate-genes.csv")
+    with open(cpath, encoding="utf-8", newline="") as fh:
+        reader = csv.DictReader(fh)
+        cand = {"fields": reader.fieldnames, "rows": list(reader)}
+    epath = os.path.join(ROOT, "data", "candidate-genes-excluded.csv")
+    with open(epath, encoding="utf-8", newline="") as fh:
+        reader = csv.DictReader(fh)
+        cand["excluded_fields"], cand["excluded"] = reader.fieldnames, list(reader)
+    cand["guide"] = column_guide(cand["fields"], start="### Candidate Columns")
+    both = {r["hgnc_id"] for r in rows} & {r["hgnc_id"] for r in cand["rows"]}
+    both |= {r["hgnc_id"] for r in cand["rows"]} & {r["hgnc_id"] for r in cand["excluded"]}
+    if both:
+        sys.exit("Genes in more than one list (main, candidate, excluded): " + ", ".join(sorted(both)))
+
     shutil.rmtree(DIST, ignore_errors=True)
     os.makedirs(DIST)
     shutil.copyfile(src, os.path.join(DIST, "cmt-genes.csv"))
-    build_xlsx(rows, fields, guide, ver, os.path.join(DIST, "cmt-genes.xlsx"))
+    build_xlsx(rows, fields, guide, ver, os.path.join(DIST, "cmt-genes.xlsx"), cand)
+    shutil.copyfile(cpath, os.path.join(DIST, "candidate-genes.csv"))
+    shutil.copyfile(epath, os.path.join(DIST, "candidate-genes-excluded.csv"))
+    with open(os.path.join(DIST, "candidate-genes.json"), "w", encoding="utf-8") as fh:
+        json.dump(cand["rows"], fh, ensure_ascii=False, indent=1)
+        fh.write("\n")
     with open(os.path.join(DIST, "cmt-genes.json"), "w", encoding="utf-8") as fh:
         json.dump(rows, fh, ensure_ascii=False, indent=1)
         fh.write("\n")
     with open(os.path.join(DIST, "datapackage.json"), "w", encoding="utf-8") as fh:
-        json.dump(build_datapackage(rows, fields, guide, ver), fh, ensure_ascii=False, indent=2)
+        json.dump(build_datapackage(rows, fields, guide, ver, cand), fh, ensure_ascii=False, indent=2)
         fh.write("\n")
-    sizes = {n: os.path.getsize(os.path.join(DIST, n)) for n in ("cmt-genes.csv", "cmt-genes.xlsx", "cmt-genes.json")}
+    sizes = {n: os.path.getsize(os.path.join(DIST, n)) for n in ("cmt-genes.csv", "cmt-genes.xlsx", "cmt-genes.json", "candidate-genes.csv")}
     with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(build_page(rows, fields, guide, ver, sizes))
+        fh.write(build_page(rows, fields, guide, ver, sizes, cand))
     for name in os.listdir(os.path.join(ROOT, "site", "pages")):
         if name.endswith((".svg", ".png")):
             shutil.copyfile(os.path.join(ROOT, "site", "pages", name), os.path.join(DIST, name))

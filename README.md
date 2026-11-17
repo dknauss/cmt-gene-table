@@ -24,6 +24,7 @@ Browse, search and download the table at **[dknauss.github.io/cmt-gene-table](ht
 | CSV | [cmt-genes.csv](https://github.com/dknauss/cmt-gene-table/releases/latest/download/cmt-genes.csv) | UTF-8, one row per ClinGen curation |
 | JSON | [cmt-genes.json](https://github.com/dknauss/cmt-gene-table/releases/latest/download/cmt-genes.json) | One object per row, same fields as the CSV |
 | Data Package | [datapackage.json](https://github.com/dknauss/cmt-gene-table/releases/latest/download/datapackage.json) | [Frictionless](https://frictionlessdata.io/) description of every column, for loading with types in R or Python |
+| Candidate genes | [candidate-genes.csv](https://github.com/dknauss/cmt-gene-table/releases/latest/download/candidate-genes.csv) | The separate list of genes reported with CMT-spectrum disease but not curated by ClinGen; also on the Excel file's Candidates sheet and as `candidate-genes.json` on the site. See "Candidate Genes Not Yet Curated" below |
 
 Each monthly update is a [release](https://github.com/dknauss/cmt-gene-table/releases) tagged by year and month (`v2026.10`), with these files attached. The links above always point to the latest release; link to a tagged release when you need a fixed version. To cite the table, use GitHub's "Cite this repository" button (from `CITATION.cff`). Every release is archived at Zenodo: [10.5281/zenodo.23371750](https://doi.org/10.5281/zenodo.23371750) always resolves to the latest version, and each version has its own DOI (v2026.10 is [10.5281/zenodo.23371751](https://doi.org/10.5281/zenodo.23371751)).
 
@@ -63,9 +64,10 @@ Supporting files:
 - `data/subtype-names.csv` holds the gene-wide subtype-name lookup, with source URLs for every gene.
 - `data/subtype-terms.csv` has one row per Mondo term behind those names: its short names, OMIM IDs and whether Monarch links it to the gene causally or only by correlation.
 - `data/clingen-phenotypes.csv` records the OMIM phenotypes each ClinGen curation includes and excludes, read from the curation pages by `tools/fetch-clingen-phenotypes.py`.
-- `site/table-body.html` and `site/gene-aliases.json` are built for the table on cmt.blog by `tools/build-page-table.py` and `tools/fetch-aliases.py` (previous official HGNC symbols, so the page search finds SEPTIN9 by SEPT9).
+- `site/table-body.html`, `site/candidate-table-body.html`, and `site/gene-aliases.json` are built for the tables on cmt.blog by `tools/build-page-table.py` and `tools/fetch-aliases.py` (previous official HGNC symbols, so the page search finds SEPTIN9 by SEPT9).
 - `site/pages/index.html` is the template for the GitHub Pages site. `tools/build-exports.py` fills it and writes the downloads to `dist/` (not committed); the column descriptions in the downloads and on the site come from the column table above.
 - `data/links.csv` holds the GeneReviews and PanelApp links, built by `tools/fetch-links.py`.
+- `data/candidate-genes.csv` and `data/candidate-genes-excluded.csv` hold the separate candidate list and the screened genes left out of it. See "Candidate Genes Not Yet Curated" below.
 - `data/hand-checked-sources.csv` holds every hand-checked value with its source URL, access date and a note. A value with two sources has two rows. A row with a `mondo_id` applies only to that curation; a blank `mondo_id` applies to every curation of the gene. `merge.py` refuses a row without a source URL.
 
 ### Names Matched to Curations
@@ -82,7 +84,7 @@ Names from Monarch correlated associations only are never attached to a curation
 
 These are built by script, so they can be regenerated.
 - **GeneReviews:** NCBI's weekly gene-to-chapter files (`NBKid_shortname_genesymbol.txt` and `GRtitle_shortname_NBKid.txt` from [ftp.ncbi.nlm.nih.gov/pub/GeneReviews](https://ftp.ncbi.nlm.nih.gov/pub/GeneReviews/)). Gene-specific chapters are listed first. Some genes are mapped to chapters about other conditions (for example SETX to ataxia chapters); those are kept because NCBI maps them. 50 genes have at least one chapter; 30 of those have overviews only; 20 have none.
-- **PanelApp:** [Genomics England panel 846](https://panelapp.genomicsengland.co.uk/panels/846/), "Hereditary neuropathy or pain disorder" (the NHS Genomic Medicine Service panel for test R78), and [PanelApp Australia panel 3070](https://panelapp-aus.org/panels/3070/), "Hereditary Neuropathy". The panel version at the time of the build is recorded in each value. This is the latest version, not necessarily the signed-off one: on October 13, 2026 the build used v8.38, and the latest signed-off version was v8.30 (August 12, 2026). PanelApp's own terms of use govern reuse of its data. Genomics England's legacy 100,000 Genomes panel 85 is not used. All 70 genes are on both panels. Genomics England links use its own gene symbols, which are older for some genes (AARS, GARS, MARS, WARS, YARS, SEPT9); matching is done by HGNC ID.
+- **PanelApp:** [Genomics England panel 846](https://panelapp.genomicsengland.co.uk/panels/846/), "Hereditary neuropathy or pain disorder" (the NHS Genomic Medicine Service panel for test R78), and [PanelApp Australia panel 3070](https://panelapp-aus.org/panels/3070/), "Hereditary Neuropathy". The panel version at the time of the build is recorded in each value. This is the latest version, not necessarily the signed-off one: on October 13, 2026 the build used v8.38, and the latest signed-off version was v8.30 (August 12, 2026). PanelApp's own terms of use govern reuse of its data. Genomics England's legacy 100,000 Genomes panel 85 is not used for the main table; the candidate list's screen uses it alongside the other two. All 70 genes are on both panels. Genomics England links use its own gene symbols, which are older for some genes (AARS, GARS, MARS, WARS, YARS, SEPT9); matching is done by HGNC ID.
 
 ### Hand-Checked Columns
 
@@ -130,7 +132,55 @@ The table follows ClinGen's Charcot-Marie-Tooth Disease Gene Curation Expert Pan
 - distal hereditary motor neuropathies;
 - a few genes outside CMT proper, such as SYT2 and SEPTIN9.
 
-It leaves out genes the panel has not curated yet. NDRG1, LMNA, PRPS1, DHTKD1 and AIFM1 are among those reported with CMT that are not in this file. Do not read their absence as a finding.
+It leaves out genes the panel has not curated yet. Many of them, such as NDRG1, LMNA, and DHTKD1, are in the separate candidate list below. Do not read a gene's absence from the main table as a finding.
+
+## Candidate Genes Not Yet Curated
+
+[`data/candidate-genes.csv`](data/candidate-genes.csv) is a second, separate list: 56 genes reported to cause CMT or a related inherited neuropathy that ClinGen has not rated for that disease. The main table is unchanged. The two lists never share a gene.
+
+The main table answers "what has ClinGen's expert panel rated, and how strongly?" The candidate list answers "what else is reported, and how much evidence is behind it?" A candidate has no ClinGen rating for its neuropathy. Many rest on one family or one paper. Treat them as leads, not settled causes.
+
+### The Rule
+
+A gene is a candidate when both are true:
+1. **Its reported disease is CMT-spectrum.** That means CMT (axonal, demyelinating, or intermediate), HMSN (including the Russe, Lom, Okinawa, and type 6 forms), distal hereditary motor neuropathy (dHMN), HSN or HSAN, congenital hypomyelinating neuropathy, giant axonal neuropathy, or a neuropathy reported on its own. The name comes from OMIM's numbered types, Mondo, PanelApp, or the key paper. When a named type comes with other features (HSN1E with dementia and hearing loss, HSAN9 with developmental delay), it still counts. A syndrome named for something else (an ataxia, a spastic paraplegia, a leukodystrophy, a metabolic disease) does not, even when neuropathy is one of its features. Neither does a motor neuron disease named as spinal muscular atrophy or ALS.
+2. **ClinGen has no curation that covers it.** ClinGen's own data are checked for every curation by every panel, not only the CMT panel. If another panel's curation includes the CMT-spectrum phenotype (for example, a "lumped" curation that lists CMTX5 among its OMIM phenotypes), the gene is not a candidate.
+
+`clingen_status` says "not curated" or names each curation the gene has for another disease, with its classification, inheritance, panel, and date. Where the curation page says which OMIM phenotypes the panel included or excluded, the note says whether the neuropathy was left out (as it was for LMNA, JAG1, and VCP, among others).
+
+### How the List Was Built
+
+1. **Screen.** Every gene rated Green or Amber on any of three PanelApp panels and not in the main table: Genomics England panel 85 "Hereditary neuropathy" (v1.513), Genomics England panel 846 "Hereditary neuropathy or pain disorder" (v8.38), and PanelApp Australia panel 3070 "Hereditary Neuropathy" (v3.5). That is 255 genes. AKAP6 was added by hand from a 2026 paper; it is on no panel.
+2. **Decide.** Each gene's reported diseases were read from PanelApp, Mondo (through the Monarch API), and ClinGen. For each candidate, the key paper's PubMed abstract was read. Evidence notes come from those abstracts and say only what they report.
+3. **Check ClinGen.** ClinGen's gene-validity download of November 17, 2026, plus each candidate's ClinGen gene page for the OMIM phenotypes included or excluded.
+
+Of the 256 genes screened, 56 are candidates and 200 are left out. Every gene left out is in [`data/candidate-genes-excluded.csv`](data/candidate-genes-excluded.csv) with a reason, so the decisions can be checked. The `category` column there is one of:
+- `curated` (3 genes): a ClinGen curation by another panel already covers the CMT-spectrum phenotype (AIFM1, PRPS1, and SPG11).
+- `mnd` (8): a motor neuron disease named as spinal muscular atrophy or ALS, not as dHMN (BICD2 and CHCHD10, for example).
+- `other` (187): a syndrome or another main disease, in which neuropathy is one feature.
+- `unconfirmed` (2): no CMT-spectrum report was found in the sources read (ARPC3 and PRPH).
+
+Red-rated genes were not screened unless another panel rates them Green or Amber, and genes on none of the three panels were not screened, apart from AKAP6. The list is therefore not complete.
+
+### Candidate Columns
+
+| Column | Source | Notes |
+|---|---|---|
+| `gene`, `hgnc_id` | HGNC via PanelApp | Current HGNC symbol and ID. CFAP276 was C1orf194 |
+| `reported_disease` | PanelApp, Mondo, or key paper | The CMT-spectrum disease reported for the gene, in plain words. "Provisional in OMIM" marks a link OMIM itself treats as unconfirmed |
+| `omim_phenotype` | PanelApp or ClinGen | OMIM phenotype ID(s) where one exists. IDs only |
+| `inheritance` | Key paper | AD, AR, XL, or MT (mitochondrial) for the reported neuropathy, which can differ from the gene's other diseases |
+| `panelapp` | PanelApp APIs | Rating and version on Genomics England panels 85 and 846 and PanelApp Australia panel 3070, or "not listed" |
+| `clingen_status` | ClinGen | "not curated", or each curation for another disease with classification, inheritance, panel, and date, plus a note on included or excluded OMIM phenotypes |
+| `key_source` | PubMed | First author, year, journal, volume, and pages of the first or main report |
+| `key_pmid`, `key_doi` | PubMed | PubMed ID and DOI of the key source |
+| `more_pmids` | PubMed | Other papers used for the evidence note, separated by `; ` |
+| `evidence_note` | Key source abstract | One plain sentence on how much evidence there is |
+| `date_checked` | Build notes | When PanelApp, ClinGen, and the sources were checked |
+
+The excluded file has `gene`, `hgnc_id`, `panelapp`, `category`, `reason`, `clingen_curations` (every ClinGen curation the gene has, or "not curated"), and `date_checked`.
+
+The candidate list is checked by hand, not rebuilt by the monthly job. `tools/build-exports.py` refuses to build if a gene appears in both lists, so a candidate that ClinGen's CMT panel curates must be moved to the main table and given a dated changelog entry.
 
 ## Rebuilding
 
@@ -144,7 +194,7 @@ python3 tools/fetch-clingen-phenotypes.py  # included/excluded OMIM phenotypes p
 python3 tools/fetch-links.py      # GeneReviews and PanelApp links (add --refresh to bypass cache/)
 python3 tools/merge.py            # write data/cmt-genes.csv, adding data/hand-checked-sources.csv
 python3 tools/fetch-aliases.py    # previous HGNC symbols for the page search
-python3 tools/build-page-table.py # site/table-body.html for cmt.blog
+python3 tools/build-page-table.py # site/table-body.html and site/candidate-table-body.html for cmt.blog
 python3 tools/build-exports.py    # dist/: Excel, CSV, JSON, Data Package and the Pages site
 ```
 

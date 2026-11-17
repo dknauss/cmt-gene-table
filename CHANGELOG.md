@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-17 (Candidate Genes Not Yet Curated)
+
+- New, separate list: `data/candidate-genes.csv`, 56 genes reported to cause CMT or a related inherited neuropathy (CMT, HMSN, dHMN, HSN or HSAN, and similar) that ClinGen has not curated for that disease. 28 have no ClinGen curation at all; 28 are curated only for another disease. The main table is unchanged: still 72 curations covering 70 genes, and no gene is in both lists.
+- How it was built: all 255 genes rated Green or Amber on Genomics England PanelApp panel 85 (v1.513), panel 846 (v8.38), or PanelApp Australia panel 3070 (v3.5) and not in the main table were checked against their reported diseases (PanelApp, Mondo, ClinGen) and against ClinGen's gene-validity download of 2026-11-17 and gene pages. AKAP6 was added by hand from Moghadam et al. 2026 (PMID 42993336). Each candidate cites a key paper whose PubMed abstract was read.
+- `data/candidate-genes-excluded.csv` lists the 200 screened genes left out, each with a category and a reason: 187 syndromes or other main diseases, 8 motor neuron diseases named as SMA or ALS, 3 already covered by another ClinGen panel's curation (AIFM1, PRPS1, and SPG11), and 2 with no CMT report found in the sources read (ARPC3 and PRPH).
+- README: new section explaining the rule, the screen, and the columns. The Scope and Gaps note now points to the candidate list.
+- Downloads and site: the Excel file has a Candidates sheet; `candidate-genes.csv`, `candidate-genes.json`, and `candidate-genes-excluded.csv` are published on the site and attached to releases; the Data Package describes both new files; the web page shows the list below the main table. `tools/build-page-table.py` also writes `site/candidate-table-body.html` for cmt.blog. `tools/build-exports.py` stops the build if a gene is in more than one list.
+
 ## 2026-11-03 (Monthly Refresh)
 
 - KIF1B (CMT2A1): ClinGen reclassified the gene-disease link from Limited to Disputed on 2026-10-19 (curation CCID:005229). The panel's reasons: one affected family only, MFN2 (in the same 1p36.2 linkage region) was not excluded in that family, and two later reported variants were too common in the general population to support the link. The `plain_note` now says so. PanelApp still rates KIF1B Red on both panels.
