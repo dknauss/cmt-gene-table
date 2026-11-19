@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-21 (Disputed and Refuted Ratings)
+
+- Stated the rule: a gene stays in the main table once ClinGen's CMT expert panel has curated it, whatever the verdict. Disputed and Refuted links are shown as such and sort last when the table is sorted by rating. The README, the web page, and the Excel About sheet now say so. A gene the CMT panel hasn't curated goes on the additional-genes list instead.
+- The row count now names the weak ratings: "72 curations covering 70 genes, including 2 rated Disputed" (KIF1B and MED25). The build counts Disputed and Refuted rows each time, so a future Refuted rating will show up in the count. No table rows changed.
+- README: explains why NEFL and PMP22 each have two curations.
+
 ## 2026-11-20 (Additional Genes: Screen Rebuilt)
 
 - The PanelApp screen was rebuilt from panel 85 v1.513, panel 846 v8.38, and PanelApp Australia panel 3070 v3.5. The 255 Green or Amber genes outside the main table, plus AKAP6, match the 256 genes in the listed and excluded files exactly, and every `panelapp` value matches its panel version. No data changed.
