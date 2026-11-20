@@ -27,6 +27,14 @@ PAGES = "https://dknauss.github.io/cmt-gene-table/"
 BLOG = "https://cmt.blog/cmt-gene-table/"
 TITLE = "Open CMT Gene Table"
 CREDIT = "Open CMT Gene Table (cmt.blog), using ClinGen (CC0) and Mondo (CC BY 4.0)"
+SCOPE = {
+    "not curated": "Not curated",
+    "other disease": "Curated for another disease",
+    "refuted other disease": "Refuted for another disease",
+    "neuropathy not scored": "Curated for another disease; neuropathy discussed, not scored",
+    "includes neuropathy": "Curated for a broader disease that includes the neuropathy",
+    "scope unresolved": "Curated for a broader disease; coverage of the neuropathy unresolved",
+}
 INH = {"AD": "Dominant", "AR": "Recessive", "SD": "Semidominant", "XL": "X-linked", "MT": "Mitochondrial"}
 
 
@@ -240,12 +248,15 @@ def jsonld(rows, ver):
 def candidate_body(cand):
     body = []
     for r in cand["rows"]:
-        status = "Not curated" if r["clingen_status"] == "not curated" else "Curated for another disease"
+        status = SCOPE[r["clingen_scope"]]
         more = [f"<p><strong>ClinGen:</strong> {html.escape(r['clingen_status'])}</p>",
                 f"<p><strong>PanelApp:</strong> {html.escape(r['panelapp'])}</p>"]
         if r["omim_phenotype"]:
             more.append(f"<p><strong>OMIM:</strong> {html.escape(r['omim_phenotype'])}</p>")
         src = f'<a href="https://pubmed.ncbi.nlm.nih.gov/{html.escape(r["key_pmid"])}/">{html.escape(r["key_source"])}</a>'
+        later = [p.strip() for p in r["more_pmids"].split(";") if p.strip()]
+        if later:
+            src += "; also " + ", ".join(f'<a href="https://pubmed.ncbi.nlm.nih.gov/{html.escape(p)}/">PMID {html.escape(p)}</a>' for p in later)
         search = " ".join([r["gene"], r["hgnc_id"], r["reported_disease"], r["omim_phenotype"], INH.get(r["inheritance"], r["inheritance"]), status])
         body.append(
             f'<tr data-search="{html.escape(search.lower())}">'
