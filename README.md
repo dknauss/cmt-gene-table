@@ -138,7 +138,7 @@ It leaves out genes the panel has not curated yet. Many of them, such as NDRG1, 
 
 <a id="candidate-genes-not-yet-curated"></a>
 
-[`data/candidate-genes.csv`](data/candidate-genes.csv) is a second, separate list: 56 genes reported with CMT or a related inherited neuropathy that are absent from the main table, which is drawn from ClinGen's CMT expert panel. The main table is unchanged, and the two lists never share a gene.
+[`data/candidate-genes.csv`](data/candidate-genes.csv) is a second, separate list: 59 genes reported with CMT or a related inherited neuropathy that are absent from the main table, which is drawn from ClinGen's CMT expert panel. The main table is unchanged, and the two lists never share a gene.
 
 Evidence for these genes ranges from established disease associations to preliminary reports. Some have relevant ClinGen curations from other expert panels, including broader disorders that encompass the neuropathy; `clingen_scope` and `clingen_status` identify them. Absence from the main table is not an evidence rating. The evidence notes describe the listed publications, not the complete evidence for each gene. The screen used three specified PanelApp panels, with AKAP6 added separately, so this is not a complete list of inherited-neuropathy genes.
 
@@ -148,16 +148,16 @@ The ClinGen status concerns gene-disease validity only. Other ClinGen frameworks
 
 A gene is a candidate when both are true:
 1. **Its reported disease is CMT-spectrum.** That means CMT (axonal, demyelinating, or intermediate), HMSN (including the Russe, Lom, Okinawa, and type 6 forms), distal hereditary motor neuropathy (dHMN), HSN or HSAN, congenital hypomyelinating neuropathy, giant axonal neuropathy, or a neuropathy reported on its own. The name comes from OMIM's numbered types, Mondo, PanelApp, or the key paper. When a named type comes with other features (HSN1E with dementia and hearing loss, HSAN9 with developmental delay), it still counts. A syndrome named for something else (an ataxia, a spastic paraplegia, a leukodystrophy, a metabolic disease) does not, even when neuropathy is one of its features. Neither does a motor neuron disease named as spinal muscular atrophy or ALS.
-2. **No ClinGen gene-disease validity curation names it.** ClinGen's gene-validity data are checked for every curation by every panel, not only the CMT panel. If another panel's curation names the CMT-spectrum disease, in its title or among its included OMIM phenotypes (for example, a "lumped" curation that lists CMTX5 among its OMIM phenotypes), the gene is left out as `curated`.
+2. **It is not in the main table.** ClinGen curations by other panels do not keep a gene out. They are checked for every listed gene, by every panel, and shown in `clingen_status` and `clingen_scope`.
 
-A lumped curation that lists no OMIM phenotypes can still include the neuropathy evidence. A November 20, 2026 fact-check found that three do: mitochondrial disease for COX6A1 (Strong) and MPV17 (Definitive), and the autosomal dominant POLR3B-related disorder (Definitive, September 3, 2025). Those genes stay in this list, marked `includes neuropathy`, and are not moved into the main table, which follows the CMT panel only.
+Before November 20, 2026, a gene was left out when another panel's curation named the CMT-spectrum disease in its title or among its included OMIM phenotypes. That hid the best-curated genes: AIFM1 (Cowchock syndrome, CMTX4), PRPS1 (CMTX5), and SPG11 (CMT2X). They are now listed, marked `includes neuropathy`. A fact-check the same day found that three lumped curations listing no OMIM phenotypes also include the neuropathy evidence: mitochondrial disease for COX6A1 (Strong) and MPV17 (Definitive), and the autosomal dominant POLR3B-related disorder (Definitive, September 3, 2025). None of these genes moves into the main table, which follows the CMT panel only.
 
 `clingen_status` says "not curated" or names each curation the gene has, with its classification, inheritance, panel, and date, and a note on its scope. Where the curation page says which OMIM phenotypes the panel included or excluded, the note says whether the neuropathy was left out (as it was for LMNA, JAG1, and VCP, among others). `clingen_scope` sums this up as one of:
 - `not curated`: no gene-validity curation.
 - `other disease`: curated for a different disease, not for the neuropathy.
 - `refuted other disease`: the gene's only curation is Refuted, for a different disease (HARS1 for Usher syndrome type 3, SCN9A for epilepsy). That rating says nothing about the neuropathy.
 - `neuropathy not scored`: the curation discusses the neuropathy study but does not score it (PCK2).
-- `includes neuropathy`: a broader curation whose evidence includes the neuropathy (COX6A1, MPV17, POLR3B).
+- `includes neuropathy`: a broader curation that includes the neuropathy among its OMIM phenotypes (AIFM1, PRPS1, SPG11) or in its evidence (COX6A1, MPV17, POLR3B).
 - `scope unresolved`: a broader curation that may or may not cover the neuropathy (SURF1, MT-TV).
 
 ### How the List Was Built
@@ -167,8 +167,7 @@ A lumped curation that lists no OMIM phenotypes can still include the neuropathy
 3. **Check ClinGen.** ClinGen's gene-validity download of November 17, 2026, plus each candidate's ClinGen gene page for the OMIM phenotypes included or excluded.
 4. **Fact-check.** On November 20, 2026, every row was checked against ClinGen's current curations and the primary papers. That check corrected the ClinGen scope notes, the POLR3B citation, and several evidence notes, and added later papers to `more_pmids`. It did not re-run the screen: the union of the three PanelApp panels was not rebuilt.
 
-Of the 256 genes screened, 56 are listed and 200 are left out. Every gene left out is in [`data/candidate-genes-excluded.csv`](data/candidate-genes-excluded.csv) with a reason, so the decisions can be checked. The `category` column there is one of:
-- `curated` (3 genes): a ClinGen curation by another panel already covers the CMT-spectrum phenotype (AIFM1, PRPS1, and SPG11).
+Of the 256 genes screened, 59 are listed and 197 are left out. Every gene left out is in [`data/candidate-genes-excluded.csv`](data/candidate-genes-excluded.csv) with a reason, so the decisions can be checked. The `category` column there is one of:
 - `mnd` (8): a motor neuron disease named as spinal muscular atrophy or ALS, not as dHMN (BICD2 and CHCHD10, for example).
 - `other` (187): a syndrome or another main disease, in which neuropathy is one feature.
 - `unconfirmed` (2): no CMT-spectrum report was found in the sources read (ARPC3 and PRPH).
