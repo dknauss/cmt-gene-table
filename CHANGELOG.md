@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-20 (Additional Genes: ClinGen Coverage No Longer Excludes) — v2026.11.1
+
+- AIFM1 (Cowchock syndrome, CMTX4), PRPS1 (CMTX5), and SPG11 (CMT2X) move from `data/candidate-genes-excluded.csv` into the list, marked `includes neuropathy`. Their ClinGen curations by other panels list these neuropathies among their included OMIM phenotypes, which had kept them out. Under the new framing, the list holds every CMT-spectrum gene outside the main table and shows its ClinGen coverage rather than using it to exclude. Key papers: Rinaldi et al. 2012 (PMID 23217327), Kim et al. 2007 (PMID 17701900), and Montecchiani et al. 2016 (PMID 26556829).
+- The list now has 59 genes; 197 screened genes are left out. The `curated` exclusion category is retired. The main table is unchanged.
+
 ## 2026-11-20 (Additional Genes: Fact-Check Corrections)
 
 - Renamed the candidate list "Additional Neuropathy Genes Outside the Main Table" and rewrote its introduction. Absence from the main table is not an evidence rating; the list ranges from established associations to preliminary reports. The ClinGen status concerns gene-disease validity only. File names are unchanged.
