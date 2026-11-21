@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-20 (Additional Genes: Secondary Fact-Check Notes)
+
+- Evidence notes and citations, each checked against its source: NDRG1 adds the 2024 Bulgarian cohort (15 patients in 11 families, PMID 39201732); HARS1 notes axonal and demyelinating forms; TRIM2 adds the patient-cell and mouse evidence; DCTN1 cites the Perry syndrome paper (PMID 19136952); GNE says the source abstract gives no genotypes and adds a 2024 recessive cohort (PMID 38674419); CNTNAP1 adds the 2018 series (PMID 29511323) for brain hypomyelination.
+- MT-TV: the reported disease now uses OMIM's name, Charcot-Marie-Tooth disease, axonal, mitochondrial form 1 (OMIM:500013).
+
 ## 2026-11-20 (Additional Genes: ClinGen Coverage No Longer Excludes) — v2026.11.1
 
 - AIFM1 (Cowchock syndrome, CMTX4), PRPS1 (CMTX5), and SPG11 (CMT2X) move from `data/candidate-genes-excluded.csv` into the list, marked `includes neuropathy`. Their ClinGen curations by other panels list these neuropathies among their included OMIM phenotypes, which had kept them out. Under the new framing, the list holds every CMT-spectrum gene outside the main table and shows its ClinGen coverage rather than using it to exclude. Key papers: Rinaldi et al. 2012 (PMID 23217327), Kim et al. 2007 (PMID 17701900), and Montecchiani et al. 2016 (PMID 26556829).
