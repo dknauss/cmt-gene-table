@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-20 (Additional Genes: Screen Rebuilt)
+
+- The PanelApp screen was rebuilt from panel 85 v1.513, panel 846 v8.38, and PanelApp Australia panel 3070 v3.5. The 255 Green or Amber genes outside the main table, plus AKAP6, match the 256 genes in the listed and excluded files exactly, and every `panelapp` value matches its panel version. No data changed.
+
 ## 2026-11-20 (Additional Genes: Monthly ClinGen Check)
 
 - New `tools/check-candidate-drift.py` compares the listed and excluded genes with ClinGen's current download. It reports a gene that ClinGen's CMT panel now curates, a listed gene whose curations differ from its `clingen_status`, and an excluded gene whose `clingen_curations` is out of date. It changes no files.
