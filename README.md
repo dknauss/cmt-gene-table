@@ -193,7 +193,7 @@ Red-rated genes were not screened unless another panel rates them Green or Amber
 
 The excluded file has `gene`, `hgnc_id`, `panelapp`, `category`, `reason`, `clingen_curations` (every ClinGen gene-disease validity curation the gene has, as "disease (classification, inheritance, panel, date)" separated by `; `, or "not curated"), and `date_checked`. `tools/fill-excluded-curations.py` fills `clingen_curations` from ClinGen's download, matching by HGNC ID.
 
-The additional list is checked by hand, not rebuilt by the monthly job. `tools/build-exports.py` refuses to build if a gene appears in both lists, so a listed gene that ClinGen's CMT panel curates must be moved to the main table and given a dated changelog entry.
+The additional list is checked by hand, not rebuilt by the monthly job. Instead, the monthly job runs `tools/check-candidate-drift.py`, which compares both files with ClinGen's current download and opens an issue (or comments on the open one) when a listed or excluded gene's curations change. `tools/build-exports.py` refuses to build if a gene appears in both lists, so a listed gene that ClinGen's CMT panel curates must be moved to the main table and given a dated changelog entry.
 
 ## Rebuilding
 
@@ -208,6 +208,7 @@ python3 tools/fetch-links.py      # GeneReviews and PanelApp links (add --refres
 python3 tools/merge.py            # write data/cmt-genes.csv, adding data/hand-checked-sources.csv
 python3 tools/fetch-aliases.py    # previous HGNC symbols for the page search
 python3 tools/fill-excluded-curations.py  # ClinGen curations for the excluded genes (add --refresh, or --check)
+python3 tools/check-candidate-drift.py  # report ClinGen changes for the listed and excluded genes (add --refresh)
 python3 tools/build-page-table.py # site/table-body.html and site/candidate-table-body.html for cmt.blog
 python3 tools/build-exports.py    # dist/: Excel, CSV, JSON, Data Package and the Pages site
 ```

@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   refresh:
@@ -27,6 +28,23 @@ jobs:
           python3 tools/merge.py
           python3 tools/fetch-aliases.py
           python3 tools/build-page-table.py
+      - name: Report ClinGen changes for the additional genes
+        # The additional-genes list is checked by hand, so this only reports.
+        # One open issue collects the reports; later months add comments.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          report="$RUNNER_TEMP/clingen-drift.md"
+          python3 tools/check-candidate-drift.py --refresh --report "$report"
+          if [ -s "$report" ]; then
+            title="ClinGen changes for the additional genes"
+            n=$(gh issue list --state open --search "\"$title\" in:title" --json number -q '.[0].number')
+            if [ -n "$n" ]; then
+              gh issue comment "$n" --body-file "$report"
+            else
+              gh issue create --title "$title" --body-file "$report"
+            fi
+          fi
       - name: Open a pull request if the data changed
         uses: peter-evans/create-pull-request@v6
         with:
