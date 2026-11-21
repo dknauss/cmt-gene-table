@@ -38,6 +38,16 @@ SCOPE = {
 INH = {"AD": "Dominant", "AR": "Recessive", "SD": "Semidominant", "XL": "X-linked", "MT": "Mitochondrial"}
 
 
+def weak_note(rows):
+    """Say how many rows carry a Disputed or Refuted rating, e.g. ", including 2 rated Disputed"."""
+    parts = []
+    for label in ("Disputed", "Refuted"):
+        n = sum(1 for r in rows if r.get("clingen_classification") == label)
+        if n:
+            parts.append(f"{n} rated {label}")
+    return ", including " + " and ".join(parts) if parts else ""
+
+
 def version():
     if "--version" in sys.argv:
         return sys.argv[sys.argv.index("--version") + 1]
@@ -153,8 +163,8 @@ def build_xlsx(rows, fields, guide, ver, path, cand=None):
         [TITLE],
         ["Version", ver],
         ["Built", datetime.date.today().isoformat()],
-        ["Rows", f"{len(rows)} ClinGen curations covering {len({r['gene'] for r in rows})} genes"],
-        ["Candidates sheet", f"{len(cand['rows'])} genes reported with CMT-spectrum disease but not curated by ClinGen for it. A separate list; see the README" if cand else ""],
+        ["Rows", f"{len(rows)} ClinGen curations covering {len({r['gene'] for r in rows})} genes{weak_note(rows)}. A gene stays in the table once ClinGen's CMT expert panel has curated it, whatever the verdict; Disputed and Refuted links are shown as such and sort last when sorted by rating."],
+        ["Candidates sheet", f"{len(cand['rows'])} genes reported with CMT-spectrum disease that are outside the main table, with any ClinGen curations by other panels. A separate list; see the README" if cand else ""],
         ["Explained and footnoted at", BLOG],
         ["Source code, history and every hand-checked source", REPO],
         ["Licence", "Data: CC BY 4.0. Credit: " + CREDIT],
@@ -314,6 +324,7 @@ def build_page(rows, fields, guide, ver, sizes, cand):
                .replace("{{BUILT}}", datetime.date.today().isoformat())
                .replace("{{ROWS}}", str(len(rows)))
                .replace("{{GENES}}", str(genes))
+               .replace("{{WEAK}}", html.escape(weak_note(rows)))
                .replace("{{TBODY}}", "\n".join(body))
                .replace("{{CAND_TBODY}}", candidate_body(cand))
                .replace("{{CAND_GENES}}", str(len(cand["rows"])))

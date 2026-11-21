@@ -32,14 +32,16 @@ You can also [open the CSV in Datasette Lite](https://lite.datasette.io/?csv=htt
 
 ## The Data
 
-[`data/cmt-genes.csv`](data/cmt-genes.csv) is the table. It has one row per ClinGen curation: 72 rows covering 70 genes. NEFL and PMP22 each have two curations.
+[`data/cmt-genes.csv`](data/cmt-genes.csv) is the table. It has one row per ClinGen curation: 72 rows covering 70 genes, including 2 rated Disputed (KIF1B and MED25). NEFL and PMP22 each have two curations, because ClinGen rates each gene separately for each disease and inheritance pattern.
+
+A gene stays in the table once ClinGen's CMT expert panel has curated it, whatever the verdict. Disputed and Refuted links are shown as such, sort last when the web page is sorted by rating, and are not established CMT genes. A gene the CMT panel hasn't curated goes on the additional-genes list instead (see "Additional Neuropathy Genes Outside the Main Table" below), whatever other panels have rated.
 
 | Column | Source | Notes |
 |---|---|---|
 | `gene`, `hgnc_id` | ClinGen | HGNC symbol and ID |
 | `clingen_disease_label`, `mondo_id` | ClinGen | The disease the gene was curated for |
 | `inheritance` | ClinGen | AD, AR, XL or SD (semidominant) |
-| `clingen_classification`, `classification_date` | ClinGen | Definitive, Strong, Moderate, Limited, Disputed… |
+| `clingen_classification`, `classification_date` | ClinGen | Definitive, Strong, Moderate, Limited, Disputed, or Refuted |
 | `clingen_report` | ClinGen | Link to the full curation |
 | `type_named_in_label` | Derived | The CMT type named in ClinGen's own label, if any |
 | `curation_subtype_names` | ClinGen + Mondo | Subtype names for the disease rated in this row, separated by `; `. See "Names Matched to Curations" below |
