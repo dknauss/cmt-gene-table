@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-20 (Additional Genes: Fact-Check Corrections)
+
+- Renamed the candidate list "Additional Neuropathy Genes Outside the Main Table" and rewrote its introduction. Absence from the main table is not an evidence rating; the list ranges from established associations to preliminary reports. The ClinGen status concerns gene-disease validity only. File names are unchanged.
+- New column `clingen_scope` in `data/candidate-genes.csv`. COX6A1 (mitochondrial disease, Strong, 2024-03-18), MPV17 (mitochondrial disease, Definitive, 2022-07-21), and POLR3B (autosomal dominant POLR3B-related disorder, Definitive, 2025-09-03) are now marked as curated for a broader disease whose evidence includes the neuropathy. They stay in this list; the main table still follows the CMT panel only. HARS1 and SCN9A show their other-disease curations as Refuted. PCK2's curation discusses the neuropathy study but does not score it. SPTAN1's dosage-sensitivity assessment is noted as a separate framework. SURF1 and MT-TV are marked unresolved.
+- Citations: POLR3B now cites the original 2021 paper (PMID 33417887), with the 2022 erratum (PMID 35395209) in `more_pmids`. LRP12 adds its ALS study (PMID 37339631) and CNTNAP1 an attenuated-phenotype report (PMID 40519116). The page now links every paper in `more_pmids`, so the later studies for BAG3, DRP2, MT-TV, and MYO9B appear beside their claims.
+- Evidence notes: PNKP adds five more unrelated Costa Rican people, all with cerebellar signs; MT-TV adds the ClinVar expert panel's October 2023 VUS for m.1661A>G; SLC5A6 is described as responsive to vitamin/cofactor supplementation, naming the combinations used; SLC12A6, MYO9B, and CNTNAP1 are qualified; REEP1 shows HMND12 with its older dHMN5B and DSMA-VB names; VWA1's variant is described as a coding 10-bp duplication; AKAP6 is described as absent from the three panels screened, not from every PanelApp panel.
+- `data/candidate-genes-excluded.csv`: `clingen_curations` was split into single characters in 164 rows (AAAS, ABCD1, and others). The new `tools/fill-excluded-curations.py` rebuilds the column from ClinGen's gene-validity download of 2026-11-20, matching by HGNC ID; 58 genes have no curation. No category or reason changed.
+- The page states the syndrome rule as the README gives it, which explains why DNMT1 (HSN1E) and TECPR2 (HSAN9) are listed.
+
 ## 2026-11-17 (Candidate Genes Not Yet Curated)
 
 - New, separate list: `data/candidate-genes.csv`, 56 genes reported to cause CMT or a related inherited neuropathy (CMT, HMSN, dHMN, HSN or HSAN, and similar) that ClinGen has not curated for that disease. 28 have no ClinGen curation at all; 28 are curated only for another disease. The main table is unchanged: still 72 curations covering 70 genes, and no gene is in both lists.

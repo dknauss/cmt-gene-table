@@ -13,12 +13,23 @@ block editor duplicates the note on save.
 
 It also writes site/candidate-table-body.html from data/candidate-genes.csv,
 for the separate list of genes reported with CMT-spectrum disease that ClinGen
-has not curated for it.
+has not curated for it. Its ClinGen cell gives the clingen_scope label and,
+for a curated gene, the curation details; later papers in more_pmids are
+linked after the key source.
 """
 import csv, html, os
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 INH = {"AD": "Dominant", "AR": "Recessive", "SD": "Semidominant", "XL": "X-linked", "MT": "Mitochondrial"}
+# Labels for clingen_scope in data/candidate-genes.csv (gene-disease validity only).
+SCOPE = {
+    "not curated": "Not curated",
+    "other disease": "Curated for another disease",
+    "refuted other disease": "Refuted for another disease",
+    "neuropathy not scored": "Curated for another disease; neuropathy discussed, not scored",
+    "includes neuropathy": "Curated for a broader disease that includes the neuropathy",
+    "scope unresolved": "Curated for a broader disease; coverage of the neuropathy unresolved",
+}
 NOTE = {"FBLN5", "HINT1", "MED25", "MFN2", "SCN11A", "SORD", "NEFL", "PMP22", "NTRK1"}
 
 rows = list(csv.DictReader(open(os.path.join(ROOT, "data", "cmt-genes.csv"), encoding="utf-8")))
@@ -58,14 +69,20 @@ print(f"{len(out)} rows written to site/table-body.html")
 cand = list(csv.DictReader(open(os.path.join(ROOT, "data", "candidate-genes.csv"), encoding="utf-8")))
 out = []
 for r in cand:
-    status = "Not curated" if r["clingen_status"] == "not curated" else "Curated for another disease"
+    status = SCOPE[r["clingen_scope"]]
+    detail = ""
+    if r["clingen_scope"] != "not curated":
+        detail = "<br><em>" + html.escape(r["clingen_status"].split(": ", 1)[1]) + "</em>"
     src = f"<a href=\"https://pubmed.ncbi.nlm.nih.gov/{r['key_pmid']}/\">{html.escape(r['key_source'])}</a>"
+    more = [p.strip() for p in r["more_pmids"].split(";") if p.strip()]
+    if more:
+        src += "; also " + ", ".join(f"<a href=\"https://pubmed.ncbi.nlm.nih.gov/{p}/\">PMID {p}</a>" for p in more)
     out.append(
         "<tr>"
         f"<td><strong>{html.escape(r['gene'])}</strong></td>"
         f"<td>{html.escape(r['reported_disease'])}</td>"
         f"<td>{INH.get(r['inheritance'], html.escape(r['inheritance']))}</td>"
-        f"<td><a href=\"https://search.clinicalgenome.org/kb/genes/{r['hgnc_id']}\">{status}</a></td>"
+        f"<td><a href=\"https://search.clinicalgenome.org/kb/genes/{r['hgnc_id']}\">{status}</a>{detail}</td>"
         f"<td>{html.escape(r['evidence_note'])}<br><em>{src}</em></td>"
         "</tr>"
     )
