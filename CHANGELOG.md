@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-20 (Additional Genes: Monthly ClinGen Check)
+
+- New `tools/check-candidate-drift.py` compares the listed and excluded genes with ClinGen's current download. It reports a gene that ClinGen's CMT panel now curates, a listed gene whose curations differ from its `clingen_status`, and an excluded gene whose `clingen_curations` is out of date. It changes no files.
+- The monthly refresh runs it and opens an issue, or comments on the open one, when anything changed. The list itself is still edited by hand.
+
 ## 2026-11-20 (Additional Genes: Secondary Fact-Check Notes)
 
 - Evidence notes and citations, each checked against its source: NDRG1 adds the 2024 Bulgarian cohort (15 patients in 11 families, PMID 39201732); HARS1 notes axonal and demyelinating forms; TRIM2 adds the patient-cell and mouse evidence; DCTN1 cites the Perry syndrome paper (PMID 19136952); GNE says the source abstract gives no genotypes and adds a 2024 recessive cohort (PMID 38674419); CNTNAP1 adds the 2018 series (PMID 29511323) for brain hypomyelination.
