@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-23 (Stable Name Order and Refresh)
+
+- `tools/build-subtypes.py` now sorts Monarch's terms by Mondo ID before building each gene's lists. Monarch returns them in no fixed order, so subtype names, Mondo IDs, OMIM IDs, and notes changed order between runs; two builds from separate fetches now produce identical files. This reorders names in about a dozen rows once (for example, GARS1 now reads "dHMN5A; CMT2D").
+- Refreshed from Monarch and PanelApp. Monarch now gives a causal, not just correlated, link for CMT2M (DNM2), CMT5 (MFN2), and CMT2B5 (NEFL), so they move from "Older or unverified" to "Other names, not rated here." GDAP1's correlated-only name is now CMT2H. ATP1A1's note picks up Mondo's new label ("impaired intellectual development"). PanelApp Australia panel 3070 is now v3.7; no gene's rating changed. No ClinGen rating changed.
+- README: the monthly refresh completed its first run on November 3, 2026.
+
 ## 2026-11-23 (Additional Genes: OMIM Provisional Flags)
 
 - Checked every listed gene's OMIM entry for the "?" that marks a provisional gene-phenotype link. The seven genes already marked provisional (BAG3's dHMN, DCAF8, DHTKD1, KARS1, NAGLU, PNKP, and REEP1) are correct. Two more are provisional in OMIM and are now marked: CCT5 (hereditary sensory neuropathy with spastic paraplegia, OMIM 256840) and SIGMAR1 (distal hereditary motor neuronopathy, autosomal recessive 2, OMIM 605726). No other listed phenotype is provisional.
