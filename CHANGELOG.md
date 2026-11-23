@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 (Additional Genes: OMIM Provisional Flags)
+
+- Checked every listed gene's OMIM entry for the "?" that marks a provisional gene-phenotype link. The seven genes already marked provisional (BAG3's dHMN, DCAF8, DHTKD1, KARS1, NAGLU, PNKP, and REEP1) are correct. Two more are provisional in OMIM and are now marked: CCT5 (hereditary sensory neuropathy with spastic paraplegia, OMIM 256840) and SIGMAR1 (distal hereditary motor neuronopathy, autosomal recessive 2, OMIM 605726). No other listed phenotype is provisional.
+
 ## 2026-11-21 (Disputed and Refuted Ratings)
 
 - Stated the rule: a gene stays in the main table once ClinGen's CMT expert panel has curated it, whatever the verdict. Disputed and Refuted links are shown as such and sort last when the table is sorted by rating. The README, the web page, and the Excel About sheet now say so. A gene the CMT panel hasn't curated goes on the additional-genes list instead.
