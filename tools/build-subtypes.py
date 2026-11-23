@@ -68,7 +68,9 @@ for g,v in genes.items():
             terms.setdefault(i['object'],set()).add(cat)
     for m in v['cg']: terms.setdefault(m,set()).add('ClinGen')
     recs=[];notes=[];nonneuro=[]
-    for m,src in terms.items():
+    # Monarch returns terms in no fixed order; sort by Mondo ID so the names,
+    # IDs and notes come out the same on every run.
+    for m,src in sorted(terms.items()):
         if m in GENERIC: continue
         e=ent(m); nm=e['name']
         sh,rule=convert(nm,e.get('exact_synonym') or [],e.get('related_synonym') or [])

@@ -215,7 +215,7 @@ python3 tools/build-page-table.py # site/table-body.html and site/candidate-tabl
 python3 tools/build-exports.py    # dist/: Excel, CSV, JSON, Data Package and the Pages site
 ```
 
-A monthly GitHub Actions job is configured to run these steps and open a pull request when ClinGen, Mondo, GeneReviews or PanelApp data change. As of October 13, 2026 it has not completed a run. The published table on cmt.blog is updated separately from `site/table-body.html`. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
+A monthly GitHub Actions job is configured to run these steps and open a pull request when ClinGen, Mondo, GeneReviews or PanelApp data change. It first completed a run on November 3, 2026. The published table on cmt.blog is updated separately from `site/table-body.html`. Hand-checked values are not refreshed automatically. Re-check trial statuses by hand. Changes are reviewed by hand before merging.
 
 ### Publishing
 
